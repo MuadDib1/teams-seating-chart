@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, BrowserView, ipcMain } = require('electron');
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -8,17 +8,17 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   });
 
-  // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -43,5 +43,25 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+ipcMain.on('openBrowserView', (event, url) => {
+  const mainWindow = BrowserWindow.getAllWindows()[0]
+  const view = new BrowserView({
+    webPreferences: {
+      contextIsolation: true,
+      partition: 'part1',
+      preload: path.join(__dirname, 'preload.js')
+    }
+  })
+  mainWindow.setBrowserView(view)
+
+  view.setBounds({ x: 0, y: 0, width: 600, height: 400 })
+  view.setAutoResize({
+    width: true,
+    height: true
+  })
+
+  const wc = view.webContents
+  wc.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36'
+  wc.loadURL(url)
+  wc.openDevTools()   
+})

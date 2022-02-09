@@ -4,7 +4,7 @@
     <div class="full-width">
       <input v-model="url">
     </div>
-    <button>開く</button>
+    <button @click="open">開く</button>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
     }
   },
   mounted () {
-    // setInterval(() => this.nowTime = new Date(), 60*1000)
+    //
   },
   computed: {
     nowTimeLabel () {
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     open () {
-      // this.startTime = loadStartTime()
+      window.mainAPI.openBrowserView(this.url)
     }
   }
 }
