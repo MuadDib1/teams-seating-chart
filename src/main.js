@@ -1,5 +1,6 @@
-const { app, BrowserWindow, BrowserView, ipcMain } = require('electron');
+const { app, BrowserWindow, BrowserView, ipcMain, Menu, Tray } = require('electron');
 const path = require('path');
+const ElectronPreferences = require('electron-preferences');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -7,28 +8,61 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+const url = 'https://teams.microsoft.com/_?lm=deeplink&lmsrc=NeutralHomePageWeb&cmpid=WebSignIn&culture=ja-jp&country=jp#/conversations/?ctx=chat';
+
+let mainWindow = null;
+let teamsWindow = null;
+let tray = null;
+
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    x: 1200,
+    y: 500,
+    // skipTaskbar: true,
+    alwaysOnTop: true,
     webPreferences: {
+      partition: 'part1',
       preload: path.join(__dirname, 'preload.js')
     }
   });
-
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  if (isDebug()) {
+    mainWindow.webContents.openDevTools();
+  }
+};
 
-  // mainWindow.webContents.openDevTools();
+const setUpTray = () => {
+  // const mainWindow = getMainWindow();
+  tray = new Tray(path.join(__dirname, 'icon_256.png'));
+  tray.setToolTip(app.getName());
+  tray.on('click', () => {
+    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+  })
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '設定',
+      click: () => {
+        preferences.show();
+      }
+    },
+    {
+      label: '終了',
+      click: app.quit
+    }
+  ])
+  tray.setContextMenu(contextMenu);
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+  setUpTray();
+});
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
@@ -43,25 +77,138 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('openBrowserView', (event, url) => {
-  const mainWindow = BrowserWindow.getAllWindows()[0]
-  const view = new BrowserView({
+ipcMain.on('openTeams', () => {
+  // const mainWindow = getMainWindow();
+
+  teamsWindow = new BrowserWindow({
+    parent: mainWindow,
+    width: 300,
+    height: 300,
+    x: 1200,
+    y: 500,
     webPreferences: {
       contextIsolation: true,
       partition: 'part1',
       preload: path.join(__dirname, 'preload.js')
     }
-  })
-  mainWindow.setBrowserView(view)
+  });
 
-  view.setBounds({ x: 0, y: 0, width: 600, height: 400 })
-  view.setAutoResize({
-    width: true,
-    height: true
-  })
+  // const view = new BrowserView({
+  //   webPreferences: {
+  //     contextIsolation: true,
+  //     partition: 'part1',
+  //     preload: path.join(__dirname, 'preload.js')
+  //   }
+  // });
+  // mainWindow.setBrowserView(view);
 
-  const wc = view.webContents
-  wc.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36'
-  wc.loadURL(url)
-  wc.openDevTools()   
+  // view.setBounds({ x: 0, y: 0, width: 600, height: 550 });
+  // view.setAutoResize({
+  //   width: true,
+  //   height: true
+  // });
+
+  const wc = teamsWindow.webContents;
+  wc.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36';
+  wc.loadURL(url);
+
+  processLogin(wc);
+  getPeople(wc);
+
+  if (isDebug()) {
+    wc.openDevTools();
+    logEvent(wc, 'did-stop-loading');
+  }
 })
+
+const processLogin = (webContents) => {
+  webContents.on('did-stop-loading', () => {
+    const title = webContents.getTitle();
+    if (title === 'アカウントにサインイン' || title === 'サインイン') {
+      webContents.executeJavaScript('window.mainAPI.processLogin()');
+    }
+  })
+}
+
+const getPeople = (webContents) => {
+  webContents.on('did-stop-loading', () => {
+    if (webContents.getURL().endsWith('?ctx=chat')) {
+      webContents.executeJavaScript('window.mainAPI.getPeople()');
+    }
+  })
+}
+
+ipcMain.on('people-extracted', (event, people) => {
+  console.log(people);
+  teamsWindow.close();
+  mainWindow.webContents.send('update-people', people);
+});
+
+const preferences = new ElectronPreferences({
+  'dataStore': path.join(app.getPath('userData'), 'preferences.json'),
+  'defaults': {
+    'setting': {
+      'input_delay': '0'
+    }
+  },
+  // 'debug': true,
+  sections: [
+    {
+      id: 'setting',
+      label: '設定',
+      icon: 'settings-gear-63',
+      form: {
+        groups: [
+          {
+            'label': 'ログイン設定',
+            'fields': [
+              {
+                label: 'メールアドレス',
+                key: 'mail',
+                type: 'text',
+                help: 'Teamsへログインするメールアドレス'
+              },
+              {
+                label: 'パスワード',
+                key: 'password',
+                type: 'text',
+              },
+            ]
+          },
+          {
+            'label': '詳細設定',
+            'fields': [
+              {
+                label: '入力待ち[ms]',
+                key: 'input_delay',
+                type: 'text',
+              },
+              {
+                label: 'デバッグモード',
+                key: 'debug',
+                type: 'checkbox',
+                options: [
+                  { label: '有効', value: 'on' }
+                ]
+              },
+            ]
+          },
+        ]
+      }
+    },
+  ]
+});
+
+const isDebug = () => {
+  const debug = preferences.value('setting.debug');
+  return !!debug && debug.includes('on');
+}
+
+const logEvent = (webcontens, name) => {
+  webcontens.on(name, (e) => {
+    console.log(name + '-----------')
+    console.log('title: ' + webcontens.getTitle())
+    console.log('url: ' + webcontens.getURL())
+    console.log();
+  })
+}

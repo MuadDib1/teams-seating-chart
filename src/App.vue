@@ -1,10 +1,14 @@
 <template>
   <div id="app">
-    <p>下記のURLを新しいBrowserViewで開きます</p>
     <div class="full-width">
-      <input v-model="url">
+      <button @click="open">最新のステータスを取得</button>
+      <ul>
+        <li v-for="person in people" :key="person.name">
+          {{ person.name }}
+          {{ person.status }}
+        </li>
+      </ul>
     </div>
-    <button @click="open">開く</button>
   </div>
 </template>
 
@@ -13,11 +17,13 @@ export default {
   name: 'App',
   data () {
     return {
-      url: 'https://teams.microsoft.com/_?lm=deeplink&lmsrc=NeutralHomePageWeb&cmpid=WebSignIn&culture=ja-jp&country=jp#/conversations/?ctx=chat'
+      people: []
     }
   },
   mounted () {
-    //
+    window.mainAPI.onPeopleUpdated((event, people) => {
+      this.people = people;
+    })
   },
   computed: {
     nowTimeLabel () {
@@ -26,13 +32,13 @@ export default {
   },
   methods: {
     open () {
-      window.mainAPI.openBrowserView(this.url)
+      window.mainAPI.openTeams()
     }
   }
 }
 </script>
 <style>
 input {
-  width: 100%;
+  width: 80%;
 }
 </style>
