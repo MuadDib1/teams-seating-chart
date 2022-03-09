@@ -34,7 +34,6 @@ const createWindow = () => {
 };
 
 const setUpTray = () => {
-  // const mainWindow = getMainWindow();
   tray = new Tray(path.join(__dirname, 'icon_256.png'));
   tray.setToolTip(app.getName());
   tray.on('click', () => {
@@ -78,8 +77,6 @@ app.on('activate', () => {
 });
 
 ipcMain.on('openTeams', () => {
-  // const mainWindow = getMainWindow();
-
   teamsWindow = new BrowserWindow({
     parent: mainWindow,
     width: 300,
@@ -92,21 +89,6 @@ ipcMain.on('openTeams', () => {
       preload: path.join(__dirname, 'preload.js')
     }
   });
-
-  // const view = new BrowserView({
-  //   webPreferences: {
-  //     contextIsolation: true,
-  //     partition: 'part1',
-  //     preload: path.join(__dirname, 'preload.js')
-  //   }
-  // });
-  // mainWindow.setBrowserView(view);
-
-  // view.setBounds({ x: 0, y: 0, width: 600, height: 550 });
-  // view.setAutoResize({
-  //   width: true,
-  //   height: true
-  // });
 
   const wc = teamsWindow.webContents;
   wc.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36';

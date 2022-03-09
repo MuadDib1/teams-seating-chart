@@ -43,7 +43,6 @@ contextBridge.exposeInMainWorld('mainAPI', {
       // メールアドレスの場合
       const email = document.querySelector('input[type="email"]');
       if (email && !email.value) {
-        console.log('[processLogin] email input...')
         email.value = preferences.setting.mail;
         email.blur();
         submitButton.click();
