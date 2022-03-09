@@ -16,12 +16,12 @@ let tray = null;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    x: 1200,
-    y: 500,
+    // width: 800,
+    // height: 600,
+    // x: 1200,
+    // y: 500,
     // skipTaskbar: true,
-    alwaysOnTop: true,
+    // alwaysOnTop: true,
     webPreferences: {
       partition: 'part1',
       preload: path.join(__dirname, 'preload.js')
@@ -81,8 +81,8 @@ ipcMain.on('openTeams', () => {
     parent: mainWindow,
     width: 300,
     height: 300,
-    x: 1200,
-    y: 500,
+    // x: 1200,
+    // y: 500,
     webPreferences: {
       contextIsolation: true,
       partition: 'part1',
