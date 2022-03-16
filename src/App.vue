@@ -1,20 +1,17 @@
 <template>
-  <div id="app">
-    <div class="full-width">
-      <button @click="open">最新のステータスを取得</button>
-      <ul>
-        <li v-for="person in people" :key="person.name">
-          {{ person.name }}
-          {{ person.status }}
-        </li>
-      </ul>
-    </div>
+  <div>
+    <status-map></status-map>
   </div>
 </template>
 
 <script>
+import StatusMap from './components/StatusMap.vue'
+
 export default {
   name: 'App',
+  components: {
+    StatusMap
+  },
   data () {
     return {
       people: []
