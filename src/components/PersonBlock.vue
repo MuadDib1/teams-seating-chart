@@ -15,16 +15,18 @@ const radius = 6
 export default {
   props: {
     person: Object,
-    x: Number,
-    y: Number
+    defaultX: Number,
+    defaultY: Number,
+    setting: Object
   },
   data() {
     return {
       configGroup: {
-        x: this.x,
-        y: this.y,
+        x: this.setting ? this.setting.x : this.defaultX,
+        y: this.setting ? this.setting.y : this.defaultY,
         draggable: true,
-        name: 'snapping-object'
+        name: 'snapping-object',
+        id: this.person.name
       },
       configRect: {
         width: initialWidth,

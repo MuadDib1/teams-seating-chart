@@ -16,8 +16,8 @@ let tray = null;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    // width: 800,
-    // height: 600,
+    width: 800,
+    height: 600,
     // x: 1200,
     // y: 500,
     // skipTaskbar: true,
@@ -130,8 +130,11 @@ const preferences = new ElectronPreferences({
   'dataStore': path.join(app.getPath('userData'), 'preferences.json'),
   'defaults': {
     'setting': {
-      'input_delay': '0'
-    }
+      'input_delay': '0',
+    },
+    'data': {
+      'layout': '[]',
+    },
   },
   // 'debug': true,
   sections: [
@@ -172,6 +175,25 @@ const preferences = new ElectronPreferences({
                 options: [
                   { label: '有効', value: 'on' }
                 ]
+              },
+            ]
+          },
+        ]
+      }
+    },
+    {
+      id: 'data',
+      label: '内部データ',
+      icon: 'lock',
+      form: {
+        groups: [
+          {
+            'label': 'ツール内部で使用するデータです ※編集しないでください',
+            'fields': [
+              {
+                label: 'レイアウト',
+                key: 'layout',
+                type: 'text',
               },
             ]
           },

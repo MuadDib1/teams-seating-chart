@@ -4,9 +4,11 @@ contextBridge.exposeInMainWorld('mainAPI', {
   openTeams: () => { 
     ipcRenderer.send('openTeams')
   },
+
   onPeopleUpdated: (callback) => {
     ipcRenderer.on('update-people', callback);
   },
+
   getPeople: () => {
     console.log('[getPeople] triggered !!!!!!!!!!');
 
@@ -29,6 +31,7 @@ contextBridge.exposeInMainWorld('mainAPI', {
 
     ipcRenderer.send('people-extracted', result);
   },
+
   processLogin: () => {
     console.log('[processLogin] triggered !!!!!!!!!!');
 
@@ -68,9 +71,20 @@ contextBridge.exposeInMainWorld('mainAPI', {
       // 状態維持オプションの場合
       const rememberForm = document.querySelector('form[action="/kmsi"]');
       if (rememberForm) {
-        submitButton.click();  
+        submitButton.click();
         return
       }
     }, preferences.setting.input_delay);
-  }
+  },
+
+  getLayout() {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    return JSON.parse(preferences.data.layout);
+  },
+
+  setLayout(layout) {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    preferences.data.layout = JSON.stringify(layout);
+    ipcRenderer.sendSync('setPreferences', preferences);
+  },
 })

@@ -1,11 +1,23 @@
 <template>
   <div>
-    <status-map></status-map>
+    <div>
+      <button @click="updateStatus">ステータスを更新</button>
+    </div>
+    <status-map :people="people"></status-map>
   </div>
 </template>
 
 <script>
 import StatusMap from './components/StatusMap.vue'
+
+const createTestData = () => {
+  const result = []
+  for (let i = 0; i < 30; i++) {
+    result.push({ name: 'Mishima Yoshinari (三島　吉就)' + i, status: '連絡可能' })
+  }
+  result.push({ name: 'Naotaka Nakanishi (中西　直孝)', status: '取り込み中' })
+  return result
+}
 
 export default {
   name: 'App',
@@ -14,7 +26,7 @@ export default {
   },
   data () {
     return {
-      people: []
+      people: createTestData()
     }
   },
   mounted () {
@@ -22,20 +34,17 @@ export default {
       this.people = people;
     })
   },
-  computed: {
-    nowTimeLabel () {
-      return null
-    }
-  },
   methods: {
-    open () {
+    updateStatus () {
       window.mainAPI.openTeams()
     }
   }
 }
 </script>
 <style>
-input {
-  width: 80%;
+.float {
+  float: right;
+  padding: 10px;
+  z-index: 1;
 }
 </style>

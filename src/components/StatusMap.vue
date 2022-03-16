@@ -4,8 +4,9 @@
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
         <person-block v-for="(person, index) in people" :key="person.name"
           :person="person"
-          :x="10"
-          :y="10 + index*60"
+          :defaultX="10"
+          :defaultY="10 + index*20"
+          :setting="getSetting(person)"
         ></person-block>
       </v-layer>
     </v-stage>
@@ -20,16 +21,16 @@ export default {
   components: {
     PersonBlock
   },
+  props: {
+    people: Array
+  },
   data() {
     return {
       configKonva: {
-        width: 1200,
-        height: 800
+        width: 1800,
+        height: 900
       },
-      people: [
-        { name: 'Mishima Yoshinari (三島　吉就)', status: '連絡可能' },
-        { name: 'Naotaka Nakanishi (中西　直孝)', status: '取り込み中' }
-      ]
+      layout: window.mainAPI.getLayout()
     };
   },
   methods: {
@@ -56,6 +57,22 @@ export default {
       const layer = this.$refs.layer.getNode()
 
       layer.find('.guid-line').forEach((l) => l.destroy());
+
+      // レイアウトを保存
+      this.layout = layer.find('Group').map(this.getSerilizedData)
+      window.mainAPI.setLayout(this.layout)
+    },
+
+    getSerilizedData(group) {
+      return {
+        x: group.x(),
+        y: group.y(),
+        id: group.id(),
+      }
+    },
+
+    getSetting(person) {
+      return this.layout.find(p => p.id === person.name)
     }
   }
 }
@@ -63,8 +80,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.status-map {
-  border-style: solid;
-  border-width: 1px;
+.status-map >>> canvas {
+  border-style: solid !important;
+  border-width: 1px !important;
 }
 </style>
