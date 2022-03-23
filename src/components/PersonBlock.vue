@@ -1,8 +1,12 @@
 <template>
   <v-group :config="configGroup" @dblclick="edit">
     <v-rect :config="configRect"></v-rect>
-    <v-circle :config="configCircle"></v-circle>
     <v-text :config="configText"></v-text>
+    <v-circle :config="configCircle" @mouseover="showTooltip" @mouseout="hideTooltip"></v-circle>
+    <v-label :config="configStatusTooltip">
+      <v-tag :config="configStatusTag"></v-tag>
+      <v-text :config="configStatusText"></v-text>
+    </v-label>
   </v-group>
 </template>
 
@@ -49,6 +53,19 @@ export default {
         radius: radius,
         fill: this.getColor(this.person.status),
         strokeWidth: 4
+      },
+      configStatusTooltip: {
+        x: initialWidth - 10,
+        y: -5,
+        opacity: 0.75,
+        visible: false,
+      },
+      configStatusTag: {
+        fill: 'yellow',
+      },
+      configStatusText: {
+        text: this.person.status,
+        fill: 'black',
       }
     };
   },
@@ -60,16 +77,29 @@ export default {
       }
     },
     getColor(status) {
+      const green = '#92c353'
+      const red = '#c4314b'
+      const orange = '#fcb80e'
+      const gray = '#dcdcdc'
+      const white = '#ffffff'
       const colorMap = new Map([
-        ['連絡可能', '#92c353'],
-        ['取り込み中', '#c4314b'],
-        ['応答不可', '#c4314b'],
-        ['一時退席中', '#fcb80e'],
-        ['退席中表示', '#fcb80e'],
-        ['オフライン', '#ffffff'],
+        ['連絡可能', green],
+        ['取り込み中', red],
+        ['応答不可', red],
+        ['通話中', red],
+        ['発表中', red],
+        ['一時退席中', orange],
+        ['退席中', orange],
+        ['オフライン', gray],
       ])
-      const otherColor = '#dcdcdc'
+      const otherColor = white
       return colorMap.has(status) ? colorMap.get(status) : otherColor
+    },
+    showTooltip() {
+      this.configStatusTooltip.visible = true
+    },
+    hideTooltip() {
+      this.configStatusTooltip.visible = false
     }
   }
 }
