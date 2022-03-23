@@ -31,7 +31,8 @@ export default {
   },
   mounted () {
     window.mainAPI.onPeopleUpdated((event, people) => {
-      this.people = people;
+      console.log(people)
+      this.people = people
     })
   },
   methods: {
