@@ -26,7 +26,8 @@ export default {
   },
   data () {
     return {
-      people: createTestData()
+      // people: createTestData()
+      people: []
     }
   },
   mounted () {
