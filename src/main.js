@@ -100,6 +100,10 @@ ipcMain.on('openTeams', () => {
     wc.openDevTools();
     logEvent(wc, 'did-stop-loading');
   }
+
+  teamsWindow.on('closed', () => {
+    mainWindow.webContents.send('update-window-closed')
+  })
 })
 
 const processLogin = (webContents) => {

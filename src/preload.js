@@ -5,6 +5,10 @@ contextBridge.exposeInMainWorld('mainAPI', {
     ipcRenderer.send('openTeams')
   },
 
+  onUpdateWindowClosed: (callback) => {
+    ipcRenderer.on('update-window-closed', callback);
+  },
+
   onPeopleUpdated: (callback) => {
     ipcRenderer.on('update-people', callback);
   },

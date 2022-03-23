@@ -1,7 +1,7 @@
 <template>
   <div class="m-3 reload-button is-pulled-right">
     <b-tooltip label="Teams で最新のステータスを取得する" position="is-left">
-      <b-button icon-right="reload" size="is-medium" rounded @click="updateStatus" />
+      <b-button icon-right="reload" size="is-medium" rounded :loading="loading" @click="updateStatus" />
     </b-tooltip>
   </div>
 </template>
@@ -13,25 +13,39 @@ export default {
   components: {
     LoginInfoForm,
   },
+  data() {
+    return {
+      loading: false
+    }
+  },
+  mounted () {
+    window.mainAPI.onUpdateWindowClosed(() => {
+      this.loading = false
+    })
+  },
   methods: {
     updateStatus () {
       if (window.mainAPI.hasLoginInfo()) {
-        window.mainAPI.openTeams()
+        this.openTeams()
       } else {
-        this.$buefy.modal.open({
+        const modal = this.$buefy.modal.open({
             parent: this,
             component: LoginInfoForm,
             hasModalCard: true,
             events: {
-              submit: this.onLoginFormSubmit
+              submit: (setting) => {
+                window.mainAPI.setLoginInfo(setting)
+                this.openTeams()
+                modal.close()
+              }
             },
             trapFocus: true
         })
       }
     },
-    onLoginFormSubmit (setting) {
-      window.mainAPI.setLoginInfo(setting)
+    openTeams () {
       window.mainAPI.openTeams()
+      this.loading = true
     }
   }
 }
