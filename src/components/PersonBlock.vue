@@ -55,8 +55,8 @@ export default {
         strokeWidth: 4
       },
       configStatusTooltip: {
-        x: initialWidth - 10,
-        y: -5,
+        x: 5,
+        y: 5,
         opacity: 0.75,
         visible: false,
       },
