@@ -22,6 +22,7 @@ const createWindow = () => {
     // y: 500,
     // skipTaskbar: true,
     // alwaysOnTop: true,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -33,7 +34,7 @@ const createWindow = () => {
 };
 
 const setUpTray = () => {
-  tray = new Tray(path.join(__dirname, 'icon_256.png'));
+  tray = new Tray(path.join(__dirname, 'assets/icon_white_256.png'));
   tray.setToolTip(app.getName());
   tray.on('click', () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
