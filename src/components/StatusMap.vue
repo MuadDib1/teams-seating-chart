@@ -2,7 +2,7 @@
   <div class="status-map">
     <v-stage ref="stage" :config="configKonva">
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
-        <person-block v-for="(person, index) in people" :key="person.name"
+        <person-block v-for="(person, index) in people" :key="person.name + person.status"
           :person="person"
           :defaultX="10"
           :defaultY="10 + index*20"

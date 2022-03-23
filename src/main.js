@@ -23,7 +23,6 @@ const createWindow = () => {
     // skipTaskbar: true,
     // alwaysOnTop: true,
     webPreferences: {
-      partition: 'part1',
       preload: path.join(__dirname, 'preload.js')
     }
   });
@@ -85,7 +84,7 @@ ipcMain.on('openTeams', () => {
     // y: 500,
     webPreferences: {
       contextIsolation: true,
-      partition: 'part1',
+      partition: 'part' + new Date().getTime(),
       preload: path.join(__dirname, 'preload.js')
     }
   });
