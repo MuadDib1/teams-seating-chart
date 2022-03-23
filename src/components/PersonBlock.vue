@@ -57,15 +57,15 @@ export default {
       configStatusTooltip: {
         x: 5,
         y: 5,
-        opacity: 0.75,
         visible: false,
       },
       configStatusTag: {
-        fill: 'yellow',
+        fill: '#EB8686',
       },
       configStatusText: {
         text: this.person.status,
-        fill: 'black',
+        padding: 5,
+        fill: 'white',
       }
     };
   },
