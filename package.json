@@ -74,6 +74,8 @@
     "css-loader": "^6.0.0",
     "electron": "17.0.0",
     "node-loader": "^2.0.0",
+    "sass": "^1.49.9",
+    "sass-loader": "^12.6.0",
     "style-loader": "^3.0.0",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.14"

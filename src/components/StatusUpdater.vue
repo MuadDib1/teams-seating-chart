@@ -1,6 +1,6 @@
 <template>
   <div class="m-3 reload-button is-pulled-right">
-    <b-tooltip label="Teams で最新のステータスを取得する" position="is-left">
+    <b-tooltip label="Teams で最新のステータスを取得する" position="is-left" type="is-pink">
       <b-button icon-right="reload" size="is-medium" rounded :loading="loading" @click="updateStatus" />
     </b-tooltip>
   </div>

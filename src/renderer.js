@@ -1,5 +1,5 @@
 import '@mdi/font/css/materialdesignicons.css'
-import 'buefy/dist/buefy.css'
+import "./style.scss"
 
 import Vue from 'vue'
 import VueKonva from 'vue-konva'
