@@ -36,7 +36,7 @@ contextBridge.exposeInMainWorld('mainAPI', {
     console.log('[processLogin] triggered !!!!!!!!!!');
 
     const preferences = ipcRenderer.sendSync('getPreferences');
-    if (!preferences.setting.mail || !preferences.setting.password) {
+    if (!preferences.setting.email || !preferences.setting.password) {
       return
     }
 
@@ -46,7 +46,7 @@ contextBridge.exposeInMainWorld('mainAPI', {
       // メールアドレスの場合
       const email = document.querySelector('input[type="email"]');
       if (email && !email.value) {
-        email.value = preferences.setting.mail;
+        email.value = preferences.setting.email;
         email.blur();
         submitButton.click();
         return
@@ -85,6 +85,18 @@ contextBridge.exposeInMainWorld('mainAPI', {
   setLayout(layout) {
     const preferences = ipcRenderer.sendSync('getPreferences');
     preferences.data.layout = JSON.stringify(layout);
+    ipcRenderer.sendSync('setPreferences', preferences);
+  },
+
+  hasLoginInfo() {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    return preferences.setting.email && preferences.setting.password;
+  },
+  
+  setLoginInfo(loginInfo) {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    preferences.setting.email = loginInfo.email
+    preferences.setting.password = loginInfo.password
     ipcRenderer.sendSync('setPreferences', preferences);
   },
 })

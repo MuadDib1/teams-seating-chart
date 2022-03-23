@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div>
-      <button @click="updateStatus">ステータスを更新</button>
+    <div class="m-3 reload-button is-pulled-right">
+      <b-tooltip label="Teams で最新のステータスを取得する" position="is-left">
+        <b-button icon-right="reload" size="is-medium" rounded @click="updateStatus" />
+      </b-tooltip>
     </div>
     <status-map :people="people"></status-map>
   </div>
@@ -9,6 +11,7 @@
 
 <script>
 import StatusMap from './components/StatusMap.vue'
+import LoginInfoForm from './components/LoginInfoForm.vue'
 
 const createTestData = () => {
   const result = []
@@ -22,7 +25,8 @@ const createTestData = () => {
 export default {
   name: 'App',
   components: {
-    StatusMap
+    StatusMap,
+    LoginInfoForm,
   },
   data () {
     return {
@@ -38,15 +42,28 @@ export default {
   },
   methods: {
     updateStatus () {
-      window.mainAPI.openTeams()
+      if (window.mainAPI.hasLoginInfo()) {
+        window.mainAPI.openTeams()
+      } else {
+        this.$buefy.modal.open({
+            parent: this,
+            component: LoginInfoForm,
+            hasModalCard: true,
+            events: {
+              submit: (setting) => {
+                window.mainAPI.setLoginInfo(setting)
+                window.mainAPI.openTeams()
+              }
+            },
+            trapFocus: true
+        })
+      }
     }
   }
 }
 </script>
 <style>
-.float {
-  float: right;
-  padding: 10px;
+.reload-button button {
   z-index: 1;
 }
 </style>

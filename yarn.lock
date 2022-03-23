@@ -574,6 +574,11 @@
   dependencies:
     cross-spawn "^7.0.1"
 
+"@mdi/font@^6.5.95":
+  version "6.5.95"
+  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.5.95.tgz#203922f6dd46397de9eb1f5956b85339adb6344d"
+  integrity sha512-ES5rj6J39FUkHe/b3C9SJs8bqIungYhuU7rBINTBaHOv/Ce4RCb3Gw08CZVl32W33UEkgRkzyWaIedV4at+QHg==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1619,6 +1624,13 @@ browserslist@^4.14.5, browserslist@^4.17.5:
     node-releases "^2.0.1"
     picocolors "^1.0.0"
 
+buefy@^0.9.19:
+  version "0.9.19"
+  resolved "https://registry.yarnpkg.com/buefy/-/buefy-0.9.19.tgz#98fab4b20d62e992dbe7f720fbfc01dfa1bf86a6"
+  integrity sha512-5AonCrtZvTfoWJwqmoTl8JbHjjn/U+q0LrSScgUWRZBaquzb8xgzWoownG4dzNHq5veQdOOxA0aUVyK+x7X07g==
+  dependencies:
+    bulma "0.9.3"
+
 buf-compare@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/buf-compare/-/buf-compare-1.0.1.tgz#fef28da8b8113a0a0db4430b0b6467b69730b34a"
@@ -1669,6 +1681,11 @@ builtin-modules@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.2.0.tgz#45d5db99e7ee5e6bc4f362e008bf917ab5049887"
   integrity sha512-lGzLKcioL90C7wMczpkY0n/oART3MbBa8R9OFGE1rJxoVI86u4WAGfEk8Wjv10eKSyTHVGkSo3bvBylCEtk7LA==
+
+bulma@0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.9.3.tgz#ddccb7436ebe3e21bf47afe01d3c43a296b70243"
+  integrity sha512-0d7GNW1PY4ud8TWxdNcP6Cc8Bu7MxcntD/RRLGWuiw/s0a9P+XlH/6QoOIrmbj6o8WWJzJYhytiu9nFjTszk1g==
 
 bytes@3.0.0:
   version "3.0.0"

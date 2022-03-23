@@ -148,7 +148,7 @@ const preferences = new ElectronPreferences({
             'fields': [
               {
                 label: 'メールアドレス',
-                key: 'mail',
+                key: 'email',
                 type: 'text',
                 help: 'Teamsへログインするメールアドレス'
               },
