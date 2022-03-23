@@ -130,7 +130,7 @@ const preferences = new ElectronPreferences({
   'dataStore': path.join(app.getPath('userData'), 'preferences.json'),
   'defaults': {
     'setting': {
-      'input_delay': '0',
+      'input_delay': '1000',
     },
     'data': {
       'layout': '[]',
