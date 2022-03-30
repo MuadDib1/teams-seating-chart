@@ -1,8 +1,8 @@
 {
-  "name": "electron-forge-teams",
-  "productName": "electron-forge-teams",
+  "name": "teams-sheating-chart",
+  "productName": "teams-sheating-chart",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Sheating chart with Teams",
   "main": ".webpack/main",
   "scripts": {
     "start": "chcp 65001 && electron-forge start",
@@ -26,7 +26,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "electron_forge_teams"
+            "name": "teams_sheating_chart"
           }
         },
         {
