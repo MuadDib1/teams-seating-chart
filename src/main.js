@@ -93,10 +93,10 @@ ipcMain.on('openTeams', () => {
   processLogin(wc);
   getPeople(wc);
 
-  if (isDebug()) {
-    wc.openDevTools();
-    logEvent(wc, 'did-stop-loading');
-  }
+  // if (isDebug()) {
+  wc.openDevTools({ mode: 'bottom' });
+  logEvent(wc, 'did-stop-loading');
+  // }
 
   teamsWindow.on('closed', () => {
     mainWindow.webContents.send('update-window-closed')
