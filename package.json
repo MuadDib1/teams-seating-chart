@@ -1,8 +1,8 @@
 {
-  "name": "teams-sheating-chart",
-  "productName": "teams-sheating-chart",
+  "name": "teams-seating-chart",
+  "productName": "teams-seating-chart",
   "version": "1.0.0",
-  "description": "Sheating chart with Teams",
+  "description": "seating chart with Teams",
   "main": ".webpack/main",
   "scripts": {
     "start": "chcp 65001 && electron-forge start",
@@ -26,7 +26,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "teams_sheating_chart"
+            "name": "teams_seating_chart",
           }
         },
         {
