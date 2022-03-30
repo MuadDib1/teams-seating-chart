@@ -18,10 +18,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    // x: 1200,
-    // y: 500,
     // skipTaskbar: true,
-    // alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -81,8 +78,6 @@ ipcMain.on('openTeams', () => {
     parent: mainWindow,
     width: 300,
     height: 300,
-    // x: 1200,
-    // y: 500,
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
