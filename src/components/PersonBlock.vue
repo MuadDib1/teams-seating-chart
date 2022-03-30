@@ -88,6 +88,7 @@ export default {
         ['応答不可', red],
         ['通話中', red],
         ['発表中', red],
+        ['会議中', red],
         ['一時退席中', orange],
         ['退席中', orange],
         ['オフライン', gray],
