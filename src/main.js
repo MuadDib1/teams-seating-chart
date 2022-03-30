@@ -83,6 +83,7 @@ ipcMain.on('openTeams', () => {
     height: 300,
     // x: 1200,
     // y: 500,
+    autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
       partition: 'part' + new Date().getTime(),
