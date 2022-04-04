@@ -93,13 +93,14 @@ ipcMain.on('openTeams', () => {
   processLogin(wc);
   getPeople(wc);
 
-  // if (isDebug()) {
-  wc.openDevTools({ mode: 'bottom' });
-  logEvent(wc, 'did-stop-loading');
-  // }
+  if (isDebug()) {
+    wc.openDevTools({ mode: 'bottom' });
+    logEvent(wc, 'did-stop-loading');
+  }
 
   teamsWindow.on('closed', () => {
-    mainWindow.webContents.send('update-window-closed')
+    clearInterval(getPeopleIntervalId);
+    mainWindow.webContents.send('update-window-closed');
   })
 })
 
@@ -112,12 +113,17 @@ const processLogin = (webContents) => {
   })
 }
 
+let getPeopleIntervalId;
 const getPeople = (webContents) => {
-  webContents.on('did-stop-loading', () => {
+  const handler = () => {
     if (webContents.getURL().endsWith('?ctx=chat')) {
-      webContents.executeJavaScript('window.mainAPI.getPeople()');
+      getPeopleIntervalId = setInterval(() => {
+        webContents.executeJavaScript('window.mainAPI.getPeople()');
+      }, 3000);
+      webContents.removeListener('did-stop-loading', handler);
     }
-  })
+  }
+  webContents.on('did-stop-loading', handler);
 }
 
 ipcMain.on('people-extracted', (event, people) => {
