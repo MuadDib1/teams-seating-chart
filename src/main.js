@@ -81,7 +81,7 @@ ipcMain.on('openTeams', () => {
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
-      partition: 'part' + new Date().getTime(),
+      partition: 'part1',
       preload: path.join(__dirname, 'preload.js')
     }
   });
@@ -128,6 +128,9 @@ const getPeople = (webContents) => {
 
 ipcMain.on('people-extracted', (event, people) => {
   console.log(people);
+  teamsWindow.webContents.session.clearStorageData({
+    storages: ['serviceworkers']
+  });
   teamsWindow.close();
   mainWindow.webContents.send('update-people', people);
 });
