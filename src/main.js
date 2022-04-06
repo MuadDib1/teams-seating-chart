@@ -133,6 +133,7 @@ ipcMain.on('people-extracted', (event, people) => {
   });
   teamsWindow.close();
   mainWindow.webContents.send('update-people', people);
+  mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
 });
 
 const preferences = new ElectronPreferences({
