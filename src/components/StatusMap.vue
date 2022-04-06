@@ -60,7 +60,7 @@ export default {
 
       // レイアウトを保存
       this.layout = layer.find('Group').map(this.getSerilizedData)
-      window.mainAPI.setLayout(this.layout)
+      window.mainAPI.saveLayout(this.layout)
     },
 
     getSerilizedData(group) {

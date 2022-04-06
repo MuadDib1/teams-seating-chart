@@ -34,7 +34,7 @@ export default {
             hasModalCard: true,
             events: {
               submit: (setting) => {
-                window.mainAPI.setLoginInfo(setting)
+                window.mainAPI.saveLoginInfo(setting)
                 this.openTeams()
                 modal.close()
               }

@@ -86,7 +86,7 @@ contextBridge.exposeInMainWorld('mainAPI', {
     return JSON.parse(preferences.data.layout);
   },
 
-  setLayout(layout) {
+  saveLayout(layout) {
     const preferences = ipcRenderer.sendSync('getPreferences');
     preferences.data.layout = JSON.stringify(layout);
     ipcRenderer.sendSync('setPreferences', preferences);
@@ -97,7 +97,7 @@ contextBridge.exposeInMainWorld('mainAPI', {
     return preferences.setting.email && preferences.setting.password;
   },
   
-  setLoginInfo(loginInfo) {
+  saveLoginInfo(loginInfo) {
     const preferences = ipcRenderer.sendSync('getPreferences');
     preferences.setting.email = loginInfo.email
     preferences.setting.password = loginInfo.password
