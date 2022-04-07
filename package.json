@@ -27,6 +27,8 @@
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "teams_seating_chart",
+            "certificateFile": "./private/osscatnet.pfx",
+            "certificatePassword": ""
           }
         },
         {
