@@ -92,6 +92,21 @@ contextBridge.exposeInMainWorld('mainAPI', {
     ipcRenderer.sendSync('setPreferences', preferences);
   },
 
+  getStatusColorMap() {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    return new Map(JSON.parse(preferences.data.status_colors));
+  },
+
+  updateStatusColor(status, color) {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+
+    const map = new Map(JSON.parse(preferences.data.status_colors));
+    map.set(status, color);
+
+    preferences.data.status_colors = JSON.stringify(Array.from(map));
+    ipcRenderer.sendSync('setPreferences', preferences);
+  },
+
   hasLoginInfo() {
     const preferences = ipcRenderer.sendSync('getPreferences');
     return preferences.setting.email && preferences.setting.password;

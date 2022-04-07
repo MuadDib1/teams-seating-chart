@@ -1,5 +1,6 @@
 <template>
   <div class="status-map">
+    <status-color-changer ref="statusColorchanger" @change="updateStatusColorMap"></status-color-changer>
     <v-stage ref="stage" :config="configKonva">
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
         <person-block v-for="(person, index) in people" :key="person.name + person.status"
@@ -7,6 +8,8 @@
           :defaultX="10"
           :defaultY="10 + index*20"
           :setting="getSetting(person)"
+          :statusColorMap="statusColorMap"
+          @changeColor="statusColorChange"
         ></person-block>
       </v-layer>
     </v-stage>
@@ -16,10 +19,12 @@
 <script>
 import * as KonvaUtils from '../utils/konva-utils.js'
 import PersonBlock from './PersonBlock.vue'
+import StatusColorChanger from './StatusColorChanger.vue'
 
 export default {
   components: {
-    PersonBlock
+    PersonBlock,
+    StatusColorChanger
   },
   props: {
     people: Array
@@ -30,7 +35,8 @@ export default {
         width: 1800,
         height: 900
       },
-      layout: window.mainAPI.getLayout()
+      layout: window.mainAPI.getLayout(),
+      statusColorMap: window.mainAPI.getStatusColorMap()
     };
   },
   methods: {
@@ -73,7 +79,15 @@ export default {
 
     getSetting(person) {
       return this.layout.find(p => p.id === person.name)
-    }
+    },
+
+    statusColorChange(data) {
+      this.$refs.statusColorchanger.open(data.status, data.color)
+    },
+
+    updateStatusColorMap() {
+      this.statusColorMap = window.mainAPI.getStatusColorMap()
+    },
   }
 }
 </script>

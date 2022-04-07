@@ -136,6 +136,22 @@ ipcMain.on('people-extracted', (event, people) => {
   mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
 });
 
+const green = '#92c353'
+const red = '#c4314b'
+const orange = '#fcb80e'
+const gray = '#dcdcdc'
+const defaultStatusColors = [
+  ['連絡可能', green],
+  ['取り込み中', red],
+  ['応答不可', red],
+  ['通話中', red],
+  ['発表中', red],
+  ['会議中', red],
+  ['一時退席中', orange],
+  ['退席中', orange],
+  ['オフライン', gray],
+]
+
 const preferences = new ElectronPreferences({
   'dataStore': path.join(app.getPath('userData'), 'preferences.json'),
   'defaults': {
@@ -144,6 +160,7 @@ const preferences = new ElectronPreferences({
     },
     'data': {
       'layout': '[]',
+      'status_colors': JSON.stringify(defaultStatusColors),
     },
   },
   // 'debug': true,
@@ -203,6 +220,11 @@ const preferences = new ElectronPreferences({
               {
                 label: 'レイアウト',
                 key: 'layout',
+                type: 'text',
+              },
+              {
+                label: 'ステータスごとの色',
+                key: 'status_colors',
                 type: 'text',
               },
             ]

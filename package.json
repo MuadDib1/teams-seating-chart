@@ -87,7 +87,7 @@
   "dependencies": {
     "@mdi/font": "^6.5.95",
     "buefy": "^0.9.19",
-    "electron-preferences": "^2.5.0",
+    "electron-preferences": "^2.6.0",
     "electron-squirrel-startup": "^1.0.0",
     "konva": "^8.3.3",
     "vue": "^2.6.14",
