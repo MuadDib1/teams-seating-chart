@@ -1,5 +1,5 @@
 <template>
-  <v-group :config="configGroup" @dblclick="edit">
+  <v-group :config="configGroup">
     <v-rect :config="configRect"></v-rect>
     <v-text :config="configText"></v-text>
     <v-circle :config="configCircle"
@@ -79,12 +79,6 @@ export default {
     },
   },
   methods: {
-    edit() {
-      const name = window.prompt('表示名を変更できます', this.configText.text)
-      if (name) {
-        this.configText.text = name
-      }
-    },
     changeColor() {
       this.$emit('changeColor', {
         status: this.person.status,
