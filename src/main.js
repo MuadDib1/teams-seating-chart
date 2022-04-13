@@ -137,7 +137,7 @@ ipcMain.on('people-extracted', (event, people) => {
 });
 
 ipcMain.on('open-chat', (event, email) => {
-  const url = `https://teams.microsoft.com/l/chat/0/0?users=${email}`
+  const url = `${useTeamsApp() ? 'msteams:' : 'https://teams.microsoft.com'}/l/chat/0/0?users=${email}`
   shell.openExternal(url);
 });
 
@@ -162,6 +162,7 @@ const preferences = new ElectronPreferences({
   'defaults': {
     'setting': {
       'input_delay': '1000',
+      'use_teams_app': ['on'],
     },
     'data': {
       'layout': '[]',
@@ -199,6 +200,14 @@ const preferences = new ElectronPreferences({
                 label: '入力待ち[ms]',
                 key: 'input_delay',
                 type: 'text',
+              },
+              {
+                label: 'Teamsアプリでチャットを開く',
+                key: 'use_teams_app',
+                type: 'checkbox',
+                options: [
+                  { label: '有効', value: 'on' }
+                ]
               },
               {
                 label: 'デバッグモード',
@@ -243,6 +252,11 @@ const preferences = new ElectronPreferences({
 const isDebug = () => {
   const debug = preferences.value('setting.debug');
   return !!debug && debug.includes('on');
+}
+
+const useTeamsApp = () => {
+  const setting = preferences.value('setting.use_teams_app');
+  return !!setting && setting.includes('on');
 }
 
 const logEvent = (webcontens, name) => {
