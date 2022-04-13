@@ -2,12 +2,12 @@
 @import "~bulma/sass/utilities/_all";
 
 // Set your colors
-$primary: #6088C6;
+$primary: #78BBE6;
 $primary-light: findLightColor($primary);
 $primary-dark: findDarkColor($primary);
 $primary-invert: findColorInvert($primary);
-$pink: #EB8686;
-$pink-invert: findColorInvert($pink);
+$orange: #F99F48;
+$orange-invert: findColorInvert($orange);
 
 // Lists and maps
 $custom-colors: null !default;
@@ -38,9 +38,9 @@ $colors: mergeColorMaps(
             $primary-light,
             $primary-dark,
         ),
-        "pink": (
-            $pink,
-            $pink-invert,
+        "orange": (
+            $orange,
+            $orange-invert,
         ),
         "link": (
             $link,
