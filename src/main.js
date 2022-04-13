@@ -136,6 +136,11 @@ ipcMain.on('people-extracted', (event, people) => {
   mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
 });
 
+ipcMain.on('open-chat', (event, email) => {
+  const url = `https://teams.microsoft.com/l/chat/0/0?users=${email}`
+  shell.openExternal(url);
+});
+
 const green = '#92c353'
 const red = '#c4314b'
 const orange = '#fcb80e'
@@ -233,11 +238,6 @@ const preferences = new ElectronPreferences({
       }
     },
   ]
-});
-
-ipcMain.on('open-chat', (event, email) => {
-  const url = `https://teams.microsoft.com/l/chat/0/0?users=${email}`
-  shell.openExternal(url);
 });
 
 const isDebug = () => {
