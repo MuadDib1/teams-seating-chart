@@ -18,7 +18,8 @@ contextBridge.exposeInMainWorld('mainAPI', {
 
     const result = Array.from(document.querySelectorAll('.recipient-group-list-item'), item => {
       const name = item.querySelector('.cle-title').innerText;
-      const email = item.querySelector('.profile-img-parent > img').dataset.upn;
+      const profileImg = item.querySelector('.profile-img-parent > img');
+      const email = profileImg ? profileImg.dataset.upn : null;
       const statusSpan = item.querySelector('.ts-skype-status');
       const status = statusSpan ? statusSpan.title : null;
       return { name, email, status }
