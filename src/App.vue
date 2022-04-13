@@ -12,9 +12,9 @@ import StatusMap from './components/StatusMap.vue'
 const createTestData = () => {
   const result = []
   for (let i = 0; i < 30; i++) {
-    result.push({ name: 'Mishima Yoshinari (三島　吉就)' + i, status: '連絡可能' })
+    result.push({ name: 'Shingen Takeda (武田　信玄)' + i, status: '連絡可能' })
   }
-  result.push({ name: 'Naotaka Nakanishi (中西　直孝)', status: '取り込み中' })
+  result.push({ name: 'Kenshin Uesugi (上杉　謙信)', status: '取り込み中' })
   return result
 }
 
