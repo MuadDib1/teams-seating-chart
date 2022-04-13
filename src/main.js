@@ -190,6 +190,7 @@ const preferences = new ElectronPreferences({
                 label: 'パスワード',
                 key: 'password',
                 type: 'text',
+                inputType: 'password',
               },
             ]
           },
