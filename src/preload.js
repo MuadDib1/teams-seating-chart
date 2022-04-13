@@ -18,9 +18,10 @@ contextBridge.exposeInMainWorld('mainAPI', {
 
     const result = Array.from(document.querySelectorAll('.recipient-group-list-item'), item => {
       const name = item.querySelector('.cle-title').innerText;
+      const email = item.querySelector('.profile-img-parent > img').dataset.upn;
       const statusSpan = item.querySelector('.ts-skype-status');
       const status = statusSpan ? statusSpan.title : null;
-      return { name, status }
+      return { name, email, status }
     }).filter(person => person.status);
 
     if (!result.length) {
@@ -118,4 +119,8 @@ contextBridge.exposeInMainWorld('mainAPI', {
     preferences.setting.password = loginInfo.password
     ipcRenderer.sendSync('setPreferences', preferences);
   },
+
+  openChat(email) {
+    ipcRenderer.send('open-chat', email)  
+  }
 })

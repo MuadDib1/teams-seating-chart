@@ -1,4 +1,4 @@
-const { app, BrowserWindow, BrowserView, ipcMain, Menu, Tray } = require('electron');
+const { app, BrowserWindow, BrowserView, ipcMain, Menu, shell, Tray } = require('electron');
 const path = require('path');
 const ElectronPreferences = require('electron-preferences');
 
@@ -233,6 +233,11 @@ const preferences = new ElectronPreferences({
       }
     },
   ]
+});
+
+ipcMain.on('open-chat', (event, email) => {
+  const url = `https://teams.microsoft.com/l/chat/0/0?users=${email}`
+  shell.openExternal(url);
 });
 
 const isDebug = () => {

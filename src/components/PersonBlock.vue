@@ -1,5 +1,8 @@
 <template>
-  <v-group :config="configGroup">
+  <v-group :config="configGroup"
+    @mouseover="showChatIcon"
+    @mouseout="hideChatIcon"
+  >
     <v-rect :config="configRect"></v-rect>
     <v-text :config="configText"></v-text>
     <v-circle :config="configCircle"
@@ -11,10 +14,13 @@
       <v-tag :config="configStatusTag"></v-tag>
       <v-text :config="configStatusText"></v-text>
     </v-label>
+    <v-image :config="configChat" @click="openChat"></v-image>
   </v-group>
 </template>
 
 <script>
+import chaticon from '../assets/chat-processing.png'
+
 const initialWidth = 100
 const initialHeight = 50
 const padding = 6
@@ -64,8 +70,21 @@ export default {
         text: this.person.status,
         padding: 5,
         fill: 'white',
+      },
+      configChat: {
+        x: initialWidth - 25,
+        y: initialHeight - 25,
+        image: null,
+        visible: false
       }
     };
+  },
+  created() {
+    const image = new window.Image()
+    image.src = chaticon
+    image.onload = () => {
+      this.configChat.image = image
+    }
   },
   computed: {
     configCircle() {
@@ -90,6 +109,15 @@ export default {
     },
     hideTooltip() {
       this.configStatusTooltip.visible = false
+    },
+    showChatIcon() {
+      this.configChat.visible = true
+    },
+    hideChatIcon() {
+      this.configChat.visible = false
+    },
+    openChat () {
+      window.mainAPI.openChat(this.person.email)
     }
   }
 }
