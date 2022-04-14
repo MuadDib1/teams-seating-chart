@@ -64,7 +64,7 @@ export default {
         visible: false,
       },
       configStatusTag: {
-        fill: '#F99F48',
+        fill: '#1B435D',
       },
       configStatusText: {
         text: this.person.status,
