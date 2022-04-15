@@ -64,12 +64,12 @@ export default {
         visible: false,
       },
       configStatusTag: {
-        fill: '#1B435D',
+        fill: 'white',
       },
       configStatusText: {
         text: this.person.status,
         padding: 5,
-        fill: 'white',
+        fill: '#1B435D',
       },
       configChat: {
         x: initialWidth - 25,
