@@ -25,6 +25,7 @@ const initialWidth = 100
 const initialHeight = 50
 const padding = 6
 const radius = 6
+const fontFamily = 'Arial,BIZ UDPGothic'
 
 export default {
   props: {
@@ -56,6 +57,8 @@ export default {
         height: initialHeight,
         padding: padding,
         verticalAlign: 'middle',
+        lineHeight: 1.5,
+        fontFamily: fontFamily,
         text: this.person.name
       },
       configStatusTooltip: {
@@ -70,6 +73,7 @@ export default {
         text: this.person.status,
         padding: 5,
         fill: '#1B435D',
+        fontFamily: fontFamily,
       },
       configChat: {
         x: initialWidth - 25,

@@ -18,8 +18,11 @@
 
 <script>
 import * as KonvaUtils from '../utils/konva-utils.js'
+import Konva from 'konva'
 import PersonBlock from './PersonBlock.vue'
 import StatusColorChanger from './StatusColorChanger.vue'
+
+Konva.pixelRatio = 2
 
 export default {
   components: {
