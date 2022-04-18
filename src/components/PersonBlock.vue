@@ -57,7 +57,6 @@ export default {
         height: initialHeight,
         padding: padding,
         verticalAlign: 'middle',
-        lineHeight: 1.5,
         fontFamily: fontFamily,
         text: this.person.name
       },
