@@ -73,7 +73,7 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('openTeams', () => {
+ipcMain.on('openTeams', async () => {
   teamsWindow = new BrowserWindow({
     parent: mainWindow,
     width: 300,
@@ -88,6 +88,9 @@ ipcMain.on('openTeams', () => {
 
   const wc = teamsWindow.webContents;
   wc.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36';
+  await wc.session.clearStorageData({
+    storages: ['serviceworkers']
+  });
   wc.loadURL(url);
 
   processLogin(wc);
@@ -128,9 +131,6 @@ const getPeople = (webContents) => {
 
 ipcMain.on('people-extracted', (event, people) => {
   console.log(people);
-  teamsWindow.webContents.session.clearStorageData({
-    storages: ['serviceworkers']
-  });
   teamsWindow.close();
   mainWindow.webContents.send('update-people', people);
   mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
