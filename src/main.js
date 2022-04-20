@@ -1,14 +1,14 @@
-const { app, BrowserWindow, ipcMain, Menu, shell, Tray } = require('electron');
 const path = require('path');
+const { app, BrowserWindow, ipcMain, Menu, shell, Tray } = require('electron');
 const ElectronPreferences = require('electron-preferences');
+
+const TeamsUtils = require('./teams.js');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit();
 }
-
-const url = 'https://teams.microsoft.com/_?lm=deeplink&lmsrc=NeutralHomePageWeb&cmpid=WebSignIn&culture=ja-jp&country=jp#/conversations/?ctx=chat';
 
 let mainWindow = null;
 let teamsWindow = null;
@@ -74,60 +74,8 @@ app.on('activate', () => {
 });
 
 ipcMain.on('openTeams', async () => {
-  teamsWindow = new BrowserWindow({
-    parent: mainWindow,
-    width: 300,
-    height: 300,
-    autoHideMenuBar: true,
-    webPreferences: {
-      contextIsolation: true,
-      partition: 'part1',
-      preload: path.join(__dirname, 'preload.js')
-    }
-  });
-
-  const wc = teamsWindow.webContents;
-  wc.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36';
-  await wc.session.clearStorageData({
-    storages: ['serviceworkers']
-  });
-  wc.loadURL(url);
-
-  processLogin(wc);
-  getPeople(wc);
-
-  if (isDebug()) {
-    wc.openDevTools({ mode: 'bottom' });
-    logEvent(wc, 'did-stop-loading');
-  }
-
-  teamsWindow.on('closed', () => {
-    clearInterval(getPeopleIntervalId);
-    mainWindow.webContents.send('update-window-closed');
-  })
-})
-
-const processLogin = (webContents) => {
-  webContents.on('did-stop-loading', () => {
-    const title = webContents.getTitle();
-    if (title === 'アカウントにサインイン' || title === 'サインイン') {
-      webContents.executeJavaScript('window.mainAPI.processLogin()');
-    }
-  })
-}
-
-let getPeopleIntervalId;
-const getPeople = (webContents) => {
-  const handler = () => {
-    if (webContents.getURL().endsWith('?ctx=chat')) {
-      getPeopleIntervalId = setInterval(() => {
-        webContents.executeJavaScript('window.mainAPI.getPeople()');
-      }, 3000);
-      webContents.removeListener('did-stop-loading', handler);
-    }
-  }
-  webContents.on('did-stop-loading', handler);
-}
+  teamsWindow = await TeamsUtils.createStatusUpdateWindow(mainWindow, isDebug());
+});
 
 ipcMain.on('people-extracted', (event, people) => {
   console.log(people);
@@ -258,13 +206,4 @@ const isDebug = () => {
 const useTeamsApp = () => {
   const setting = preferences.value('setting.use_teams_app');
   return !!setting && setting.includes('on');
-}
-
-const logEvent = (webcontens, name) => {
-  webcontens.on(name, (e) => {
-    console.log(name + '-----------')
-    console.log('title: ' + webcontens.getTitle())
-    console.log('url: ' + webcontens.getURL())
-    console.log();
-  })
 }
