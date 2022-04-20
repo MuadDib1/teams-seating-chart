@@ -1,5 +1,5 @@
 const path = require('path');
-const { app, BrowserWindow, ipcMain, Menu, shell, Tray } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
 const ElectronPreferences = require('electron-preferences');
 
 const TeamsUtils = require('./teams.js');
@@ -85,8 +85,7 @@ ipcMain.on('people-extracted', (event, people) => {
 });
 
 ipcMain.on('open-chat', (event, email) => {
-  const url = `${useTeamsApp() ? 'msteams:' : 'https://teams.microsoft.com'}/l/chat/0/0?users=${email}`
-  shell.openExternal(url);
+  TeamsUtils.openChat(email, useTeamsApp());
 });
 
 const green = '#92c353'

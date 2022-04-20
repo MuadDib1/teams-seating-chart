@@ -1,5 +1,10 @@
 const path = require('path');
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, shell } = require('electron');
+
+module.exports.openChat = function(email, inTeamsApp) {
+  const url = `${inTeamsApp ? 'msteams:' : 'https://teams.microsoft.com'}/l/chat/0/0?users=${email}`
+  shell.openExternal(url);
+}
 
 module.exports.createStatusUpdateWindow = async function(parentWindow, debug) {
   const teamsWindow = new BrowserWindow({
