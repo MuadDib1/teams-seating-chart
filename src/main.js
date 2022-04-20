@@ -1,4 +1,4 @@
-const { app, BrowserWindow, BrowserView, ipcMain, Menu, shell, Tray } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, shell, Tray } = require('electron');
 const path = require('path');
 const ElectronPreferences = require('electron-preferences');
 
