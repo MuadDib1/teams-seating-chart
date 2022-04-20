@@ -21,11 +21,11 @@
 <script>
 import chaticon from '../assets/chat-processing.png'
 
-const initialWidth = 100
-const initialHeight = 50
-const padding = 6
-const radius = 6
-const fontFamily = 'Arial,BIZ UDPGothic'
+const BLOCK_WIDTH = 100
+const BLOCK_HEIGHT = 50
+const PADDING = 6
+const STATUS_RADIUS = 6
+const FONT_FAMILY = 'Arial,BIZ UDPGothic'
 
 export default {
   props: {
@@ -45,19 +45,19 @@ export default {
         id: this.person.name
       },
       configRect: {
-        width: initialWidth,
-        height: initialHeight,
+        width: BLOCK_WIDTH,
+        height: BLOCK_HEIGHT,
         // https://saruwakakun.com/design/gallery/palette
         fill: '#D5EEFF',
         stroke: '#1B435D',
         strokeWidth: 1
       },
       configText: {
-        width: initialWidth,
-        height: initialHeight,
-        padding: padding,
+        width: BLOCK_WIDTH,
+        height: BLOCK_HEIGHT,
+        padding: PADDING,
         verticalAlign: 'middle',
-        fontFamily: fontFamily,
+        fontFamily: FONT_FAMILY,
         text: this.person.name
       },
       configStatusTooltip: {
@@ -72,11 +72,11 @@ export default {
         text: this.person.status,
         padding: 5,
         fill: '#1B435D',
-        fontFamily: fontFamily,
+        fontFamily: FONT_FAMILY,
       },
       configChat: {
-        x: initialWidth - 25,
-        y: initialHeight - 25,
+        x: BLOCK_WIDTH - 25,
+        y: BLOCK_HEIGHT - 25,
         image: null,
         visible: false
       }
@@ -92,9 +92,9 @@ export default {
   computed: {
     configCircle() {
       return {
-        x: initialWidth - radius - padding,
-        y: radius + padding,
-        radius: radius,
+        x: BLOCK_WIDTH - STATUS_RADIUS - PADDING,
+        y: STATUS_RADIUS + PADDING,
+        radius: STATUS_RADIUS,
         fill: this.statusColorMap.get(this.person.status) || 'white',
         strokeWidth: 4
       }
