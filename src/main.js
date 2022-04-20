@@ -73,7 +73,6 @@ ipcMain.on('openTeams', async () => {
 });
 
 ipcMain.on('people-extracted', (event, people) => {
-  console.log(people);
   teamsWindow.close();
   mainWindow.webContents.send('update-people', people);
   mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
