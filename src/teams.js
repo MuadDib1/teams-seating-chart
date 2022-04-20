@@ -6,7 +6,7 @@ module.exports.openChat = function(email, inTeamsApp) {
   shell.openExternal(url);
 }
 
-module.exports.createStatusUpdateWindow = async function(parentWindow, debug) {
+module.exports.createWindowAndScrapePeople = async function(parentWindow, debug) {
   const teamsWindow = new BrowserWindow({
     parent: parentWindow,
     width: 300,
@@ -27,7 +27,7 @@ module.exports.createStatusUpdateWindow = async function(parentWindow, debug) {
   wc.loadURL('https://teams.microsoft.com/_?lm=deeplink&lmsrc=NeutralHomePageWeb&cmpid=WebSignIn&culture=ja-jp&country=jp#/conversations/?ctx=chat');
 
   processLogin(wc);
-  getPeople(wc);
+  scrapePeople(wc);
 
   if (debug) {
     wc.openDevTools({ mode: 'bottom' });
@@ -35,8 +35,8 @@ module.exports.createStatusUpdateWindow = async function(parentWindow, debug) {
   }
 
   teamsWindow.on('closed', () => {
-    clearInterval(getPeopleIntervalId);
-    parentWindow.webContents.send('update-window-closed');
+    clearInterval(scrapePeopleIntervalId);
+    parentWindow.webContents.send('scraping-window-closed');
   })
 
   return teamsWindow;
@@ -51,12 +51,12 @@ const processLogin = (webContents) => {
   })
 }
 
-let getPeopleIntervalId;
-const getPeople = (webContents) => {
+let scrapePeopleIntervalId;
+const scrapePeople = (webContents) => {
   const handler = () => {
     if (webContents.getURL().endsWith('?ctx=chat')) {
-      getPeopleIntervalId = setInterval(() => {
-        webContents.executeJavaScript('window.mainAPI.getPeople()');
+      scrapePeopleIntervalId = setInterval(() => {
+        webContents.executeJavaScript('window.mainAPI.scrapePeople()');
       }, 3000);
       webContents.removeListener('did-stop-loading', handler);
     }

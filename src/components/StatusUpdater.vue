@@ -19,7 +19,7 @@ export default {
     }
   },
   mounted () {
-    window.mainAPI.onUpdateWindowClosed(() => {
+    window.mainAPI.onScrapingWindowClosed(() => {
       this.loading = false
     })
   },
@@ -44,7 +44,7 @@ export default {
       }
     },
     openTeams () {
-      window.mainAPI.openTeams()
+      window.mainAPI.scrapePeopleFromTeams()
       this.loading = true
     }
   }

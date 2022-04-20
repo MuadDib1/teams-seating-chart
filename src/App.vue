@@ -31,7 +31,7 @@ export default {
     }
   },
   mounted () {
-    window.mainAPI.onPeopleUpdated((event, people) => {
+    window.mainAPI.onPeopleScraped((event, people) => {
       console.log(people)
       this.people = people
     })

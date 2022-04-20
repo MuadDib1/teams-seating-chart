@@ -68,13 +68,13 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('openTeams', async () => {
-  teamsWindow = await TeamsUtils.createStatusUpdateWindow(mainWindow, Settings.isDebug());
+ipcMain.on('scrape-people-from-teams', async () => {
+  teamsWindow = await TeamsUtils.createWindowAndScrapePeople(mainWindow, Settings.isDebug());
 });
 
-ipcMain.on('people-extracted', (event, people) => {
+ipcMain.on('people-scraped', (event, people) => {
   teamsWindow.close();
-  mainWindow.webContents.send('update-people', people);
+  mainWindow.webContents.send('people-scraped', people);
   mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
 });
 

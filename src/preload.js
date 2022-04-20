@@ -1,20 +1,20 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('mainAPI', {
-  openTeams: () => { 
-    ipcRenderer.send('openTeams')
+  scrapePeopleFromTeams: () => { 
+    ipcRenderer.send('scrape-people-from-teams')
   },
 
-  onUpdateWindowClosed: (callback) => {
-    ipcRenderer.on('update-window-closed', callback);
+  onScrapingWindowClosed: (callback) => {
+    ipcRenderer.on('scraping-window-closed', callback);
   },
 
-  onPeopleUpdated: (callback) => {
-    ipcRenderer.on('update-people', callback);
+  onPeopleScraped: (callback) => {
+    ipcRenderer.on('people-scraped', callback);
   },
 
-  getPeople: () => {
-    console.log('[getPeople] triggered !!!!!!!!!!');
+  scrapePeople: () => {
+    console.log('[scrapePeople] triggered !!!!!!!!!!');
 
     const result = Array.from(document.querySelectorAll('.recipient-group-list-item'), item => {
       const name = item.querySelector('.cle-title').innerText;
@@ -35,7 +35,7 @@ contextBridge.exposeInMainWorld('mainAPI', {
       return
     }
 
-    ipcRenderer.send('people-extracted', result);
+    ipcRenderer.send('people-scraped', result);
   },
 
   processLogin: () => {
