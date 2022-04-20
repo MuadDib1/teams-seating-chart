@@ -26,6 +26,12 @@ const BLOCK_HEIGHT = 50
 const PADDING = 6
 const STATUS_RADIUS = 6
 const FONT_FAMILY = 'Arial,BIZ UDPGothic'
+const COLOR = {
+  base: '#78BBE6',
+  light: '#D5EEFF',
+  dark: '#1B435D',
+  accent: '#F99F48',
+}
 
 export default {
   props: {
@@ -48,8 +54,8 @@ export default {
         width: BLOCK_WIDTH,
         height: BLOCK_HEIGHT,
         // https://saruwakakun.com/design/gallery/palette
-        fill: '#D5EEFF',
-        stroke: '#1B435D',
+        fill: COLOR.light,
+        stroke: COLOR.dark,
         strokeWidth: 1
       },
       configText: {
@@ -71,7 +77,7 @@ export default {
       configStatusText: {
         text: this.person.status,
         padding: 5,
-        fill: '#1B435D',
+        fill: COLOR.dark,
         fontFamily: FONT_FAMILY,
       },
       configChat: {
