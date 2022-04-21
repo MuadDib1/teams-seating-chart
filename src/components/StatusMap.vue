@@ -5,9 +5,8 @@
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
         <person-block v-for="(person, index) in people" :key="person.name + person.status"
           :person="person"
-          :defaultX="10"
-          :defaultY="10 + index*20"
-          :setting="getSetting(person)"
+          :x="getX(person)"
+          :y="getY(person, index)"
           :statusColorMap="statusColorMap"
           @changeColor="statusColorChange"
         ></person-block>
@@ -78,6 +77,16 @@ export default {
         y: group.y(),
         id: group.id(),
       }
+    },
+
+    getX(person) {
+      const setting = this.getSetting(person)
+      return setting ? setting.x : 10
+    },
+
+    getY(person, index) {
+      const setting = this.getSetting(person)
+      return setting ? setting.y : 10 + index*20
     },
 
     getSetting(person) {

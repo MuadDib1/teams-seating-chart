@@ -36,16 +36,15 @@ const COLOR = {
 export default {
   props: {
     person: Object,
-    defaultX: Number,
-    defaultY: Number,
-    setting: Object,
+    x: Number,
+    y: Number,
     statusColorMap: Map
   },
   data() {
     return {
       configGroup: {
-        x: this.setting ? this.setting.x : this.defaultX,
-        y: this.setting ? this.setting.y : this.defaultY,
+        x: this.x,
+        y: this.y,
         draggable: true,
         name: 'snapping-object',
         id: this.person.name
