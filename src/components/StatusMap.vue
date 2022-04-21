@@ -79,6 +79,10 @@ export default {
       }
     },
 
+    getSetting(person) {
+      return this.layout.find(p => p.id === person.name)
+    },
+
     getX(person) {
       const setting = this.getSetting(person)
       return setting ? setting.x : 10
@@ -87,10 +91,6 @@ export default {
     getY(person, index) {
       const setting = this.getSetting(person)
       return setting ? setting.y : 10 + index*20
-    },
-
-    getSetting(person) {
-      return this.layout.find(p => p.id === person.name)
     },
 
     statusColorChange(data) {
