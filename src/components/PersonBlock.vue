@@ -50,7 +50,7 @@ export default {
         y: this.y,
         draggable: true,
         name: 'snapping-object',
-        id: this.name
+        id: `${this.email}|${this.name}`
       },
       configRect: {
         width: BLOCK_WIDTH,
