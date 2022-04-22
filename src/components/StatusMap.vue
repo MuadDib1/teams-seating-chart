@@ -21,6 +21,15 @@ import Konva from 'konva'
 import PersonBlock from './PersonBlock.vue'
 import StatusColorChanger from './StatusColorChanger.vue'
 
+const createTestData = () => {
+  const result = []
+  for (let i = 0; i < 30; i++) {
+    result.push({ name: 'Shingen Takeda (武田　信玄)' + i, status: '連絡可能' })
+  }
+  result.push({ name: 'Kenshin Uesugi (上杉　謙信)', status: '取り込み中' })
+  return result
+}
+
 Konva.pixelRatio = 2
 
 export default {
@@ -28,18 +37,22 @@ export default {
     PersonBlock,
     StatusColorChanger
   },
-  props: {
-    people: Array
-  },
   data() {
     return {
       configKonva: {
         width: 1800,
         height: 900
       },
+      people: [],
       layout: window.mainAPI.getLayout(),
       statusColorMap: window.mainAPI.getStatusColorMap()
     };
+  },
+  mounted () {
+    window.mainAPI.onPeopleScraped((event, people) => {
+      console.log(people)
+      this.people = people
+    })
   },
   methods: {
     onDragmove(e) {
