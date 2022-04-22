@@ -38,7 +38,7 @@ export default {
     person: Object,
     x: Number,
     y: Number,
-    statusColorMap: Map
+    statusColor: String
   },
   data() {
     return {
@@ -100,7 +100,7 @@ export default {
         x: BLOCK_WIDTH - STATUS_RADIUS - PADDING,
         y: STATUS_RADIUS + PADDING,
         radius: STATUS_RADIUS,
-        fill: this.statusColorMap.get(this.person.status) || 'white',
+        fill: this.statusColor,
         strokeWidth: 4
       }
     },

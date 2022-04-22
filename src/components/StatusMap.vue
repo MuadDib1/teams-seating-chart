@@ -7,7 +7,7 @@
           :person="person"
           :x="getX(person)"
           :y="getY(person, index)"
-          :statusColorMap="statusColorMap"
+          :statusColor="getColor(person.status)"
           @changeColor="statusColorChange"
         ></person-block>
       </v-layer>
@@ -91,6 +91,10 @@ export default {
     getY(person, index) {
       const setting = this.getSetting(person)
       return setting ? setting.y : 10 + index*20
+    },
+
+    getColor(status) {
+      return this.statusColorMap.get(status) || 'white'
     },
 
     statusColorChange(data) {
