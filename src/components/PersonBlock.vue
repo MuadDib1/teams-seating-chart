@@ -26,6 +26,7 @@ const BLOCK_HEIGHT = 50
 const PADDING = 6
 const STATUS_RADIUS = 6
 const FONT_FAMILY = 'Arial,BIZ UDPGothic'
+// https://saruwakakun.com/design/gallery/palette
 const COLOR = {
   base: '#78BBE6',
   light: '#D5EEFF',
@@ -52,7 +53,6 @@ export default {
       configRect: {
         width: BLOCK_WIDTH,
         height: BLOCK_HEIGHT,
-        // https://saruwakakun.com/design/gallery/palette
         fill: COLOR.light,
         stroke: COLOR.dark,
         strokeWidth: 1
