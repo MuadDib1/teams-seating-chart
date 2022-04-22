@@ -36,9 +36,11 @@ const COLOR = {
 
 export default {
   props: {
-    person: Object,
     x: Number,
     y: Number,
+    name: String,
+    email: String,
+    status: String,
     statusColor: String
   },
   data() {
@@ -48,7 +50,7 @@ export default {
         y: this.y,
         draggable: true,
         name: 'snapping-object',
-        id: this.person.name
+        id: this.name
       },
       configRect: {
         width: BLOCK_WIDTH,
@@ -63,7 +65,7 @@ export default {
         padding: PADDING,
         verticalAlign: 'middle',
         fontFamily: FONT_FAMILY,
-        text: this.person.name
+        text: this.name
       },
       configStatusTooltip: {
         x: 5,
@@ -74,7 +76,7 @@ export default {
         fill: 'white',
       },
       configStatusText: {
-        text: this.person.status,
+        text: this.status,
         padding: 5,
         fill: COLOR.dark,
         fontFamily: FONT_FAMILY,
@@ -108,7 +110,7 @@ export default {
   methods: {
     changeColor() {
       this.$emit('changeColor', {
-        status: this.person.status,
+        status: this.status,
         color: this.configCircle.fill
       })
     },
@@ -125,7 +127,7 @@ export default {
       this.configChat.visible = false
     },
     openChat () {
-      window.mainAPI.openChat(this.person.email)
+      window.mainAPI.openChat(this.email)
     }
   }
 }

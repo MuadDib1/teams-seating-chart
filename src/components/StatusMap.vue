@@ -3,11 +3,8 @@
     <status-color-changer ref="statusColorchanger" @change="updateStatusColorMap"></status-color-changer>
     <v-stage ref="stage" :config="configKonva">
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
-        <person-block v-for="(person, index) in people" :key="person.name + person.status"
-          :person="person"
-          :x="getX(person)"
-          :y="getY(person, index)"
-          :statusColor="getColor(person.status)"
+        <person-block v-for="p in peopleBlocks" :key="p.key"
+          v-bind="p"
           @changeColor="statusColorChange"
         ></person-block>
       </v-layer>
@@ -43,6 +40,7 @@ export default {
         width: 1800,
         height: 900
       },
+      // people: createTestData(),
       people: [],
       layout: window.mainAPI.getLayout(),
       statusColorMap: window.mainAPI.getStatusColorMap()
@@ -53,6 +51,22 @@ export default {
       console.log(people)
       this.people = people
     })
+  },
+  computed: {
+    peopleBlocks() {
+      return this.people.map((person, index) => {
+        const setting = this.getSetting(person)
+        return {
+          key: person.name + person.status,
+          x: setting ? setting.x : 10,
+          y: setting ? setting.y : 10 + index*20,
+          name: person.name,
+          email: person.email,
+          status: person.status,
+          statusColor: this.statusColorMap.get(person.status) || 'white',
+        }
+      })
+    }
   },
   methods: {
     onDragmove(e) {
@@ -94,20 +108,6 @@ export default {
 
     getSetting(person) {
       return this.layout.find(p => p.id === person.name)
-    },
-
-    getX(person) {
-      const setting = this.getSetting(person)
-      return setting ? setting.x : 10
-    },
-
-    getY(person, index) {
-      const setting = this.getSetting(person)
-      return setting ? setting.y : 10 + index*20
-    },
-
-    getColor(status) {
-      return this.statusColorMap.get(status) || 'white'
     },
 
     statusColorChange(data) {
