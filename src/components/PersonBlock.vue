@@ -41,7 +41,7 @@ export default {
     name: String,
     email: String,
     status: String,
-    statusColor: String
+    statusColorMap: Map
   },
   data() {
     return {
@@ -102,7 +102,7 @@ export default {
         x: BLOCK_WIDTH - STATUS_RADIUS - PADDING,
         y: STATUS_RADIUS + PADDING,
         radius: STATUS_RADIUS,
-        fill: this.statusColor,
+        fill: this.statusColorMap.get(this.status) || 'white',
         strokeWidth: 4
       }
     },

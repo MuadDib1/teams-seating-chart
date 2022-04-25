@@ -5,6 +5,7 @@
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
         <person-block v-for="p in peopleBlocks" :key="p.key"
           v-bind="p"
+          :statusColorMap="statusColorMap"
           @changeColor="statusColorChange"
         ></person-block>
       </v-layer>
