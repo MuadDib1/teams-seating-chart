@@ -6,6 +6,7 @@
   "main": ".webpack/main",
   "scripts": {
     "start": "chcp 65001 && electron-forge start",
+    "test": "jest",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -77,6 +78,7 @@
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.0.0",
     "electron": "17.0.0",
+    "jest": "^27.5.1",
     "node-loader": "^2.0.0",
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
