@@ -19,6 +19,8 @@ import Konva from 'konva'
 import PersonBlock from './PersonBlock.vue'
 import StatusColorChanger from './StatusColorChanger.vue'
 
+const PersonBlockService = require('../utils/person-block-service.js')
+
 const createTestData = () => {
   const result = []
   for (let i = 0; i < 30; i++) {
@@ -41,8 +43,7 @@ export default {
         width: 1800,
         height: 900
       },
-      people: createTestData(),
-      // people: [],
+      peopleBlocks: PersonBlockService.from(window.mainAPI.getLayout()),
       layout: window.mainAPI.getLayout(),
       statusColorMap: window.mainAPI.getStatusColorMap()
     };
@@ -50,43 +51,9 @@ export default {
   mounted () {
     window.mainAPI.onPeopleScraped((event, people) => {
       console.log(people)
-      this.people = people
+      this.peopleBlocks = PersonBlockService.merge(this.peopleBlocks, people)
     })
-  },
-  computed: {
-    peopleBlocks() {
-      const updatedPeople = this.people.map((person, index) => {
-        const setting = this.getSetting(person)
-        return {
-          key: person.name + person.status,
-          x: setting ? setting.x : 10,
-          y: setting ? setting.y : 10 + index*20,
-          name: person.name,
-          email: person.email,
-          status: person.status,
-          statusColor: this.statusColorMap.get(person.status) || 'white',
-        }
-      })
-
-      const unknownPeople = this.layout
-        .map(this.convertToPerson)
-        .filter(person => person.email)
-        .filter(person => !updatedPeople.some(p => p.name === person.name))
-        .map(person => {
-          return {
-            key: person.name,
-            x: person.x,
-            y: person.y,
-            name: person.name,
-            email: person.email,
-            status: '状態不明',
-            statusColor: 'white',
-          }
-        })
-
-      console.log(unknownPeople)
-      return updatedPeople
-    }
+    // this.peopleBlocks = PersonBlockService.merge(this.peopleBlocks, createTestData())
   },
   methods: {
     onDragmove(e) {
@@ -124,36 +91,6 @@ export default {
         y: group.y(),
         id: group.id(),
       }
-    },
-
-    convertToPerson(setting) {
-      if (setting.id.includes('|')) {
-        const index = setting.id.indexOf('|')
-        const email = setting.id.slice(0, index)
-        const name = setting.id.slice(index+1)
-        return {
-          x: setting.x,
-          y: setting.y,
-          name,
-          email,
-          status: '状態不明'
-        }
-      } else {
-        // v1.0.3以前
-        return {
-          x: setting.x,
-          y: setting.y,
-          name: setting.id,
-          email: null,
-          status: '状態不明'
-        }
-      }
-    },
-
-    getSetting(person) {
-      return this.layout
-        .map(this.convertToPerson)
-        .find(p => p.name === person.name)
     },
 
     statusColorChange(data) {
