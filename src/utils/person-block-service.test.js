@@ -46,6 +46,14 @@ describe('from', () => {
     ];
     expect(target.from(layout)).toEqual(expected);
   });
+
+  test('id が空の時（v1.0.3以前）', () => {
+    const layout = [
+      { x: 1, y: 2, id: ''}
+    ];
+    const expected = [];
+    expect(target.from(layout)).toEqual(expected);
+  });
 });
 
 describe('merge', () => {

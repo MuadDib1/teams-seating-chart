@@ -81,7 +81,9 @@ export default {
       layer.find('.guid-line').forEach((l) => l.destroy());
 
       // レイアウトを保存
-      this.layout = layer.find('Group').map(this.getSerilizedData)
+      this.layout = layer.find('Group')
+        .filter(group => group.id()) // Group を継承している Label を除外
+        .map(this.getSerilizedData)
       window.mainAPI.saveLayout(this.layout)
     },
 

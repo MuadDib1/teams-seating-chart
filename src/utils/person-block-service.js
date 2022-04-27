@@ -21,7 +21,8 @@ const convertToPersonBlock = (setting) => {
 
 module.exports = {
   from: (layout) => {
-    return layout.map(convertToPersonBlock);
+    return layout.map(convertToPersonBlock)
+      .filter(b => b.name); // v1.0.3 以前は Label オブジェクトが誤って保存されていたため、ここで name 空を除いておく
   },
 
   merge: (blocks, people) => {
