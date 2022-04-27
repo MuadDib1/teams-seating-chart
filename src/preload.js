@@ -40,12 +40,12 @@ contextBridge.exposeInMainWorld('mainAPI', {
 
   processLogin: () => {
     console.log('[processLogin] triggered !!!!!!!!!!');
-
+    
     const preferences = ipcRenderer.sendSync('getPreferences');
     if (!preferences.setting.email || !preferences.setting.password) {
       return
     }
-
+    
     setTimeout(() => {
       const submitButton = document.querySelector('input[type="submit"]') || document.querySelector('#submitButton');
 
@@ -68,6 +68,10 @@ contextBridge.exposeInMainWorld('mainAPI', {
       // パスワードの場合
       const password = document.querySelector('input[type="password"]');
       if (password) {
+        const errorMessage = document.querySelector('#passwordError');
+        if (errorMessage) {
+          return
+        }
         password.value = preferences.setting.password;
         password.blur();
         submitButton.click();
