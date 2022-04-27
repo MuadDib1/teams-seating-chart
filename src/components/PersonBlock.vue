@@ -14,7 +14,7 @@
       <v-tag :config="configStatusTag"></v-tag>
       <v-text :config="configStatusText"></v-text>
     </v-label>
-    <v-image :config="configChat" @click="openChat"></v-image>
+    <v-image v-if="email" :config="configChat" @click="openChat"></v-image>
   </v-group>
 </template>
 
