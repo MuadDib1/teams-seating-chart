@@ -52,6 +52,7 @@ export default {
     window.mainAPI.onPeopleScraped((event, people) => {
       console.log(people)
       this.peopleBlocks = PersonBlockService.merge(this.peopleBlocks, people)
+      this.$nextTick(this.save)
     })
     // this.peopleBlocks = PersonBlockService.merge(this.peopleBlocks, createTestData())
   },
@@ -76,6 +77,10 @@ export default {
     },
 
     onDragend(e) {
+      this.save()
+    },
+
+    save() {
       const layer = this.$refs.layer.getNode()
 
       layer.find('.guid-line').forEach((l) => l.destroy());
