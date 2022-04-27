@@ -3,7 +3,7 @@
     <status-color-changer ref="statusColorchanger" @change="updateStatusColorMap"></status-color-changer>
     <v-stage ref="stage" :config="configKonva">
       <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
-        <person-block v-for="p in peopleBlocks" :key="p.key"
+        <person-block v-for="p in peopleBlocks" :key="p.name"
           v-bind="p"
           :statusColorMap="statusColorMap"
           @changeColor="statusColorChange"

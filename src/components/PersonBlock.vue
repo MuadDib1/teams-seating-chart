@@ -45,27 +45,12 @@ export default {
   },
   data() {
     return {
-      configGroup: {
-        x: this.x,
-        y: this.y,
-        draggable: true,
-        name: 'snapping-object',
-        id: `${this.email}|${this.name}`
-      },
       configRect: {
         width: BLOCK_WIDTH,
         height: BLOCK_HEIGHT,
         fill: COLOR.light,
         stroke: COLOR.dark,
         strokeWidth: 1
-      },
-      configText: {
-        width: BLOCK_WIDTH,
-        height: BLOCK_HEIGHT,
-        padding: PADDING,
-        verticalAlign: 'middle',
-        fontFamily: FONT_FAMILY,
-        text: this.name
       },
       configStatusTooltip: {
         x: 5,
@@ -74,12 +59,6 @@ export default {
       },
       configStatusTag: {
         fill: 'white',
-      },
-      configStatusText: {
-        text: this.status,
-        padding: 5,
-        fill: COLOR.dark,
-        fontFamily: FONT_FAMILY,
       },
       configChat: {
         x: BLOCK_WIDTH - 25,
@@ -97,6 +76,25 @@ export default {
     }
   },
   computed: {
+    configGroup() {
+      return { 
+        x: this.x,
+        y: this.y,
+        draggable: true,
+        name: 'snapping-object',
+        id: `${this.email}|${this.name}`
+      }
+    },
+    configText() {
+      return {
+        width: BLOCK_WIDTH,
+        height: BLOCK_HEIGHT,
+        padding: PADDING,
+        verticalAlign: 'middle',
+        fontFamily: FONT_FAMILY,
+        text: this.name
+      }
+    },
     configCircle() {
       return {
         x: BLOCK_WIDTH - STATUS_RADIUS - PADDING,
@@ -104,6 +102,14 @@ export default {
         radius: STATUS_RADIUS,
         fill: this.statusColorMap.get(this.status) || 'white',
         strokeWidth: 4
+      }
+    },
+    configStatusText() {
+      return {
+        text: this.status,
+        padding: 5,
+        fill: COLOR.dark,
+        fontFamily: FONT_FAMILY,
       }
     },
   },
