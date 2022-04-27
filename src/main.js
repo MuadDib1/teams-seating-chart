@@ -10,6 +10,8 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+const APP_TITLE = `Teams 座席表 ${app.getVersion()}`
+
 let mainWindow = null;
 let teamsWindow = null;
 let tray = null;
@@ -18,6 +20,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    title: APP_TITLE,
     // skipTaskbar: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -75,10 +78,9 @@ ipcMain.on('scrape-people-from-teams', async () => {
 ipcMain.on('people-scraped', (event, people) => {
   teamsWindow.close();
   mainWindow.webContents.send('people-scraped', people);
-  mainWindow.setTitle(`Teams 座席表 (${new Date().toLocaleString()} 時点)`)
+  mainWindow.setTitle(`${APP_TITLE} (${new Date().toLocaleString()} 時点)`)
 });
 
 ipcMain.on('open-chat', (event, email) => {
   TeamsUtils.openChat(email, Settings.useTeamsApp());
 });
-
