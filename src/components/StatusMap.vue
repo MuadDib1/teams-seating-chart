@@ -54,23 +54,27 @@ export default {
       this.peopleBlocks = PersonBlockService.merge(this.peopleBlocks, people)
       this.$nextTick(this.save)
     })
-    // this.peopleBlocks = PersonBlockService.merge(this.peopleBlocks, createTestData())
+  },
+  computed: {
+    stage: function () {
+      return this.$refs.stage.getNode()
+    },
+    layer: function () {
+      return this.$refs.layer.getNode()
+    },
   },
   methods: {
     onDragmove(e) {
-      const stage = this.$refs.stage.getNode()
-      const layer = this.$refs.layer.getNode()
+      this.layer.find('.guid-line').forEach((l) => l.destroy());
 
-      layer.find('.guid-line').forEach((l) => l.destroy());
-
-      const lineGuideStops = KonvaUtils.getLineGuideStops(stage, e.target);
+      const lineGuideStops = KonvaUtils.getLineGuideStops(this.stage, e.target);
       const itemBounds = KonvaUtils.getObjectSnappingEdges(e.target);
       const guides = KonvaUtils.getGuides(lineGuideStops, itemBounds);
       if (!guides.length) {
         return;
       }
 
-      KonvaUtils.drawGuides(layer, guides);
+      KonvaUtils.drawGuides(this.layer, guides);
 
       const absPos = KonvaUtils.getAdjustedAbsPos(e.target.absolutePosition(), guides);
       e.target.absolutePosition(absPos);
@@ -81,12 +85,10 @@ export default {
     },
 
     save() {
-      const layer = this.$refs.layer.getNode()
-
-      layer.find('.guid-line').forEach((l) => l.destroy());
+      this.layer.find('.guid-line').forEach((l) => l.destroy());
 
       // レイアウトを保存
-      this.layout = layer.find('Group')
+      this.layout = this.layer.find('Group')
         .filter(group => group.id()) // Group を継承している Label を除外
         .map(this.getSerilizedData)
       window.mainAPI.saveLayout(this.layout)
