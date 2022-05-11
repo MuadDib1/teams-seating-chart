@@ -206,3 +206,32 @@ export function getAdjustedAbsPos(beforePos, guides) {
 
   return absPos;
 }
+
+export function updateTransformerNodes(stage, transformer, clickedNode, metaPressed) {
+  if (clickedNode === stage) {
+    transformer.nodes([]); // 選択クリア
+    return;
+  }
+
+  const parentNode = clickedNode.getParent();
+  const clickedOnTransformer = parentNode.className === "Transformer";
+  if (clickedOnTransformer) {
+    return;
+  }
+
+  const isSelected = transformer.nodes().includes(parentNode);
+
+  // clickedNode は Text になっており、parentNode が Group なので parentNode を追加/削除する
+  if (!metaPressed && !isSelected) {
+    transformer.nodes([parentNode]);
+    
+  } else if (metaPressed && isSelected) {
+    const nodes = transformer.nodes().slice();
+    nodes.splice(nodes.indexOf(parentNode), 1); // 削除
+    transformer.nodes(nodes);
+    
+  } else if (metaPressed && !isSelected) {
+    const nodes = transformer.nodes().concat([parentNode]); // 追加
+    transformer.nodes(nodes);
+  }
+}
