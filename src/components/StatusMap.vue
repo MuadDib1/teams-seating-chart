@@ -78,43 +78,40 @@ export default {
       this.$nextTick(this.save)
     })
   },
-  computed: {
-    stage: function () {
-      return this.$refs.stage.getNode()
+  methods: {
+    getStage() {
+      return this.$refs.stage ? this.$refs.stage.getNode() : null
     },
-    layer: function () {
+    getLayer() {
       return this.$refs.layer.getNode()
     },
-    transformer: function () {
+    getTransformer() {
       return this.$refs.transformer.getNode()
     },    
-  },
-  methods: {
     onDragmove(e) {
-      this.layer.find('.guid-line').forEach((l) => l.destroy());
+      this.getLayer().find('.guid-line').forEach((l) => l.destroy());
 
-      const lineGuideStops = KonvaUtils.getLineGuideStops(this.stage, e.target);
+      const lineGuideStops = KonvaUtils.getLineGuideStops(this.getStage(), e.target);
       const itemBounds = KonvaUtils.getObjectSnappingEdges(e.target);
       const guides = KonvaUtils.getGuides(lineGuideStops, itemBounds);
       if (!guides.length) {
         return;
       }
 
-      KonvaUtils.drawGuides(this.layer, guides);
+      KonvaUtils.drawGuides(this.getLayer(), guides);
 
       const absPos = KonvaUtils.getAdjustedAbsPos(e.target.absolutePosition(), guides);
       e.target.absolutePosition(absPos);
     },
 
     onDragend(e) {
-      this.save()
+      this.getLayer().find('.guid-line').forEach((l) => l.destroy());
+      this.save();
     },
 
     save() {
-      this.layer.find('.guid-line').forEach((l) => l.destroy());
-
       // レイアウトを保存
-      this.layout = this.layer.find('Group')
+      this.layout = this.getLayer().find('Group')
         .filter(group => group.id()) // Group を継承している Label を除外
         .map(this.getSerilizedData)
       window.mainAPI.saveLayout(this.layout)
@@ -138,17 +135,17 @@ export default {
 
     onStageClick(e) {
       const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-      KonvaUtils.updateTransformerNodes(this.stage, this.transformer, e.target, metaPressed);
+      KonvaUtils.updateTransformerNodes(this.getStage(), this.getTransformer(), e.target, metaPressed);
     },
 
     onStageMousedown(e) {
       // do nothing if we mousedown on any shape
-      if (e.target !== this.stage) {
+      if (e.target !== this.getStage()) {
         return;
       }
       e.evt.preventDefault();
 
-      this.rectRegionCalculator.start(this.stage.getPointerPosition());
+      this.rectRegionCalculator.start(this.getStage().getPointerPosition());
       this.configSelectionRect = {
         ...this.configSelectionRect,
         visible: true,
@@ -163,7 +160,7 @@ export default {
       }
       e.evt.preventDefault();
 
-      const rect = this.rectRegionCalculator.getRect(this.stage.getPointerPosition());
+      const rect = this.rectRegionCalculator.getRect(this.getStage().getPointerPosition());
       this.configSelectionRect = {
         ...this.configSelectionRect,
         ...rect
@@ -181,11 +178,11 @@ export default {
       });
 
       const box = this.$refs.selectionRect.getNode().getClientRect();
-      const shapes = this.stage.find('Group');
+      const shapes = this.getStage().find('Group');
       const selected = shapes.filter((shape) =>
         Konva.Util.haveIntersection(box, shape.getClientRect())
       );
-      this.transformer.nodes(selected);
+      this.getTransformer().nodes(selected);
     },
   }
 }
