@@ -20,6 +20,7 @@
 
 <script>
 import chaticon from '../assets/chat-processing.png'
+import { SNAPPING_LABEL } from '../utils/konva-utils.js'
 
 const BLOCK_WIDTH = 100
 const BLOCK_HEIGHT = 50
@@ -81,7 +82,7 @@ export default {
         x: this.x,
         y: this.y,
         draggable: true,
-        name: 'snapping-object',
+        name: SNAPPING_LABEL,
         id: `${this.email}|${this.name}`
       }
     },

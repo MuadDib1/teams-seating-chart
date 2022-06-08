@@ -1,5 +1,7 @@
 const GUIDELINE_OFFSET = 5;
 
+export const SNAPPING_LABEL = 'snapping-object';
+
 // were can we snap our objects?
 export function getLineGuideStops(stage, skipShape) {
   // we can snap to stage borders and the center of the stage
@@ -7,7 +9,7 @@ export function getLineGuideStops(stage, skipShape) {
   var horizontal = [0, stage.height() / 2, stage.height()];
 
   // and we snap over edges and center of each object on the canvas
-  stage.find('.snapping-object').forEach((guideItem) => {
+  stage.find(`.${SNAPPING_LABEL}`).forEach((guideItem) => {
     if (guideItem === skipShape) {
       return;
     }
