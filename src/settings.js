@@ -27,6 +27,7 @@ const preferences = new ElectronPreferences({
     },
     'data': {
       'layout': '[]',
+      'custom_labels': '[]',
       'status_colors': JSON.stringify(defaultStatusColors),
     },
   },
@@ -96,6 +97,11 @@ const preferences = new ElectronPreferences({
               {
                 label: 'レイアウト',
                 key: 'layout',
+                type: 'text',
+              },
+              {
+                label: 'カスタムラベル',
+                key: 'custom_labels',
                 type: 'text',
               },
               {

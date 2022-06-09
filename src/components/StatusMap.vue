@@ -1,8 +1,10 @@
 <template>
   <div class="status-map">
     <status-color-changer ref="statusColorchanger" @change="updateStatusColorMap"></status-color-changer>
+
     <v-stage ref="stage" :config="configKonva"
       @click="onStageClick"
+      @contextmenu="onStageContextMenu"
       @mousedown="onStageMousedown"
       @mousemove="onStageMousemove"
       @mouseup="onStageMouseup"
@@ -13,10 +15,19 @@
           :statusColorMap="statusColorMap"
           @changeColor="statusColorChange"
         ></person-block>
+
+        <editable-text v-for="label in customLables" :key="label.id"
+          v-bind="label"
+          :stage="getStage()"
+          @change="save"
+        ></editable-text>
+
         <v-transformer ref="transformer" :config="configTransformer"></v-transformer>
         <v-rect ref="selectionRect" :config="configSelectionRect"></v-rect>
       </v-layer>
     </v-stage>
+
+    <context-menu ref="menu" :stage="getStage()" @addlabelClicked="addLabel"></context-menu>
   </div>
 </template>
 
@@ -25,6 +36,8 @@ import KonvaRectRegionCalculator from '../utils/konva-rect-region-calculator.js'
 import * as KonvaUtils from '../utils/konva-utils.js'
 import Konva from 'konva'
 import PersonBlock from './PersonBlock.vue'
+import ContextMenu from './ContextMenu.vue'
+import EditableText from './EditableText.vue'
 import StatusColorChanger from './StatusColorChanger.vue'
 
 const PersonBlockService = require('../utils/person-block-service.js')
@@ -38,11 +51,15 @@ const createTestData = () => {
   return result
 }
 
+const CUSTOM_LABEL_PREFIX = 'customLabel:'
+
 Konva.pixelRatio = 2
 
 export default {
   components: {
     PersonBlock,
+    ContextMenu,
+    EditableText,
     StatusColorChanger
   },
   data() {
@@ -64,6 +81,7 @@ export default {
         height: 0,
       },
       rectRegionCalculator: new KonvaRectRegionCalculator(),
+      customLables: window.mainAPI.getCustomLabels(),
       peopleBlocks: PersonBlockService.from(window.mainAPI.getLayout()),
       layout: window.mainAPI.getLayout(),
       statusColorMap: window.mainAPI.getStatusColorMap()
@@ -89,6 +107,9 @@ export default {
       return this.$refs.transformer.getNode()
     },    
     onDragmove(e) {
+      if (e.target.attrs.name !== KonvaUtils.SNAPPING_LABEL) {
+        return
+      }
       this.getLayer().find('.guid-line').forEach((l) => l.destroy());
 
       const lineGuideStops = KonvaUtils.getLineGuideStops(this.getStage(), e.target);
@@ -113,15 +134,33 @@ export default {
       // レイアウトを保存
       this.layout = this.getLayer().find('Group')
         .filter(group => group.id()) // Group を継承している Label を除外
-        .map(this.getSerilizedData)
+        .filter(group => !group.id().startsWith(CUSTOM_LABEL_PREFIX)) // カスタムラベルを除外
+        .map(this.toSerilizedLayout)
       window.mainAPI.saveLayout(this.layout)
+
+      // カスタムラベルを保存
+      const labels = this.getLayer().find('Group')
+        .filter(group => group.id() && group.id().startsWith(CUSTOM_LABEL_PREFIX))
+        .map(this.toSerilizedLabel)
+        .filter(label => label.text) // 空ラベルは除外
+      window.mainAPI.saveCustomLabels(labels)
     },
 
-    getSerilizedData(group) {
+    toSerilizedLayout(group) {
       return {
         x: group.x(),
         y: group.y(),
         id: group.id(),
+      }
+    },
+
+    toSerilizedLabel(group) {
+      const index = group.id().indexOf('|');
+      return {
+        x: group.x(),
+        y: group.y(),
+        id: group.id().slice(0, index),
+        text: group.id().slice(index+1),
       }
     },
 
@@ -136,6 +175,10 @@ export default {
     onStageClick(e) {
       const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
       KonvaUtils.updateTransformerNodes(this.getStage(), this.getTransformer(), e.target, metaPressed);
+
+      if (this.$refs.menu) {
+        this.$refs.menu.hide(); 
+      }
     },
 
     onStageMousedown(e) {
@@ -184,6 +227,22 @@ export default {
       );
       this.getTransformer().nodes(selected);
     },
+
+    onStageContextMenu(e) {
+      if (e.target !== this.getStage()) {
+        return;
+      }
+      this.$refs.menu.show();
+    },
+
+    addLabel() {
+      this.customLables.push({
+        id: CUSTOM_LABEL_PREFIX + new Date().getTime(),
+        text: '新しいラベル',
+        x: this.getStage().getPointerPosition().x,
+        y: this.getStage().getPointerPosition().y,
+      });
+    }
   }
 }
 </script>

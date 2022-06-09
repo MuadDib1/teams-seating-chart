@@ -98,6 +98,17 @@ contextBridge.exposeInMainWorld('mainAPI', {
     ipcRenderer.sendSync('setPreferences', preferences);
   },
 
+  getCustomLabels() {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    return JSON.parse(preferences.data.custom_labels);
+  },
+
+  saveCustomLabels(custom_labels) {
+    const preferences = ipcRenderer.sendSync('getPreferences');
+    preferences.data.custom_labels = JSON.stringify(custom_labels);
+    ipcRenderer.sendSync('setPreferences', preferences);
+  },
+
   getStatusColorMap() {
     const preferences = ipcRenderer.sendSync('getPreferences');
     return new Map(JSON.parse(preferences.data.status_colors));
