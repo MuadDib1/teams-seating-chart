@@ -3,7 +3,7 @@ const GUIDELINE_OFFSET = 5;
 export const SNAPPING_LABEL = 'snapping-object';
 
 // were can we snap our objects?
-export function getLineGuideStops(stage, skipShape) {
+function getLineGuideStops(stage, skipShape) {
   // we can snap to stage borders and the center of the stage
   var vertical = [0, stage.width() / 2, stage.width()];
   var horizontal = [0, stage.height() / 2, stage.height()];
@@ -27,7 +27,7 @@ export function getLineGuideStops(stage, skipShape) {
 // what points of the object will trigger to snapping?
 // it can be just center of the object
 // but we will enable all edges and center
-export function getObjectSnappingEdges(node) {
+function getObjectSnappingEdges(node) {
   var box = node.getClientRect();
   var absPos = node.absolutePosition();
 
@@ -70,7 +70,7 @@ export function getObjectSnappingEdges(node) {
 }
 
 // find all snapping possibilities
-export function getGuides(lineGuideStops, itemBounds) {
+function getGuides(lineGuideStops, itemBounds) {
   var resultV = [];
   var resultH = [];
 
@@ -127,14 +127,28 @@ export function getGuides(lineGuideStops, itemBounds) {
   return guides;
 }
 
-export function drawGuides(layer, guides) {
+export function drawGuidesAndAdjustPosition(stage, layer, target) {
+  const lineGuideStops = getLineGuideStops(stage, target);
+  const itemBounds = getObjectSnappingEdges(target);
+  const guides = getGuides(lineGuideStops, itemBounds);
+  if (!guides.length) {
+    return;
+  }
+
+  drawGuides(layer, guides);
+
+  const absPos = getAdjustedAbsPos(target.absolutePosition(), guides);
+  target.absolutePosition(absPos);
+}
+
+function drawGuides(layer, guides) {
   guides.forEach((lg) => {
     if (lg.orientation === 'H') {
       var line = new Konva.Line({
         points: [-6000, 0, 6000, 0],
         stroke: 'rgb(0, 161, 255)',
         strokeWidth: 1,
-        name: 'guid-line',
+        name: 'guide-line',
         dash: [4, 6],
       });
       layer.add(line);
@@ -147,7 +161,7 @@ export function drawGuides(layer, guides) {
         points: [0, -6000, 0, 6000],
         stroke: 'rgb(0, 161, 255)',
         strokeWidth: 1,
-        name: 'guid-line',
+        name: 'guide-line',
         dash: [4, 6],
       });
       layer.add(line);
@@ -159,7 +173,11 @@ export function drawGuides(layer, guides) {
   });
 }
 
-export function getAdjustedAbsPos(beforePos, guides) {
+export function clearGuides(layer) {
+  layer.find('.guide-line').forEach((l) => l.destroy());
+}
+
+function getAdjustedAbsPos(beforePos, guides) {
   const absPos = { ...beforePos };
 
   guides.forEach((lg) => {

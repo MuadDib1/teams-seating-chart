@@ -9,11 +9,11 @@
       @mousemove="onStageMousemove"
       @mouseup="onStageMouseup"
     >
-      <v-layer ref="layer" @dragmove="onDragmove" @dragend="onDragend">
+      <v-layer ref="layer" @dragmove="onLayerDragmove" @dragend="onLayerDragend">
         <person-block v-for="p in peopleBlocks" :key="p.name"
           v-bind="p"
           :statusColorMap="statusColorMap"
-          @changeColor="statusColorChange"
+          @changeColor="showStatusColorChanger"
         ></person-block>
 
         <editable-text v-for="label in customLables" :key="label.id"
@@ -105,29 +105,6 @@ export default {
     },
     getTransformer() {
       return this.$refs.transformer.getNode()
-    },    
-    onDragmove(e) {
-      if (e.target.attrs.name !== KonvaUtils.SNAPPING_LABEL) {
-        return
-      }
-      this.getLayer().find('.guid-line').forEach((l) => l.destroy());
-
-      const lineGuideStops = KonvaUtils.getLineGuideStops(this.getStage(), e.target);
-      const itemBounds = KonvaUtils.getObjectSnappingEdges(e.target);
-      const guides = KonvaUtils.getGuides(lineGuideStops, itemBounds);
-      if (!guides.length) {
-        return;
-      }
-
-      KonvaUtils.drawGuides(this.getLayer(), guides);
-
-      const absPos = KonvaUtils.getAdjustedAbsPos(e.target.absolutePosition(), guides);
-      e.target.absolutePosition(absPos);
-    },
-
-    onDragend(e) {
-      this.getLayer().find('.guid-line').forEach((l) => l.destroy());
-      this.save();
     },
 
     save() {
@@ -164,7 +141,7 @@ export default {
       }
     },
 
-    statusColorChange(data) {
+    showStatusColorChanger(data) {
       this.$refs.statusColorchanger.open(data.status, data.color)
     },
 
@@ -172,22 +149,39 @@ export default {
       this.statusColorMap = window.mainAPI.getStatusColorMap()
     },
 
-    onStageClick(e) {
-      const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-      KonvaUtils.updateTransformerNodes(this.getStage(), this.getTransformer(), e.target, metaPressed);
+    showContextMenu() {
+      this.$refs.menu.show();
+    },
 
+    hideContextMenu() {
       if (this.$refs.menu) {
         this.$refs.menu.hide(); 
       }
     },
 
-    onStageMousedown(e) {
-      // do nothing if we mousedown on any shape
-      if (e.target !== this.getStage()) {
-        return;
-      }
-      e.evt.preventDefault();
+    addLabel() {
+      this.customLables.push({
+        id: CUSTOM_LABEL_PREFIX + new Date().getTime(),
+        text: '新しいラベル',
+        x: this.getStage().getPointerPosition().x,
+        y: this.getStage().getPointerPosition().y,
+      });
+    },
 
+    drawGuidesAndAdjustPosition(target) {
+      KonvaUtils.drawGuidesAndAdjustPosition(this.getStage(), this.getLayer(), target);
+    },
+
+    clearGuides() {
+      KonvaUtils.clearGuides(this.getLayer());
+    },
+
+    updateClickSelection(mouseEvent, target) {
+      const metaPressed = mouseEvent.shiftKey || mouseEvent.ctrlKey || mouseEvent.metaKey;
+      KonvaUtils.updateTransformerNodes(this.getStage(), this.getTransformer(), target, metaPressed);
+    },
+
+    startDragSelection() {
       this.rectRegionCalculator.start(this.getStage().getPointerPosition());
       this.configSelectionRect = {
         ...this.configSelectionRect,
@@ -197,12 +191,7 @@ export default {
       }
     },
 
-    onStageMousemove(e) {
-      if (!this.configSelectionRect.visible) {
-        return;
-      }
-      e.evt.preventDefault();
-
+    updateDragSelection() {
       const rect = this.rectRegionCalculator.getRect(this.getStage().getPointerPosition());
       this.configSelectionRect = {
         ...this.configSelectionRect,
@@ -210,11 +199,7 @@ export default {
       }
     },
 
-    onStageMouseup(e) {
-      if (!this.configSelectionRect.visible) {
-        return;
-      }
-      e.evt.preventDefault();
+    finishDragSelection() {
       // update visibility in timeout, so we can check it in click event
       setTimeout(() => {
         this.configSelectionRect.visible = false;
@@ -228,20 +213,57 @@ export default {
       this.getTransformer().nodes(selected);
     },
 
+    isDragSelecting() {
+      return this.configSelectionRect.visible
+    },
+    
+    onLayerDragmove(e) {
+      if (e.target.attrs.name !== KonvaUtils.SNAPPING_LABEL) {
+        return
+      }
+      this.clearGuides();
+      this.drawGuidesAndAdjustPosition(e.target);
+    },
+
+    onLayerDragend(e) {
+      this.clearGuides();
+      this.save();
+    },
+
+    onStageClick(e) {
+      this.updateClickSelection(e.evt, e.target);
+      this.hideContextMenu();
+    },
+
+    onStageMousedown(e) {
+      if (e.target !== this.getStage()) {
+        return;
+      }
+      e.evt.preventDefault();
+      this.startDragSelection();
+    },
+
+    onStageMousemove(e) {
+      if (!this.isDragSelecting()) {
+        return;
+      }
+      e.evt.preventDefault();
+      this.updateDragSelection();
+    },
+
+    onStageMouseup(e) {
+      if (!this.isDragSelecting()) {
+        return;
+      }
+      e.evt.preventDefault();
+      this.finishDragSelection();
+    },
+
     onStageContextMenu(e) {
       if (e.target !== this.getStage()) {
         return;
       }
-      this.$refs.menu.show();
-    },
-
-    addLabel() {
-      this.customLables.push({
-        id: CUSTOM_LABEL_PREFIX + new Date().getTime(),
-        text: '新しいラベル',
-        x: this.getStage().getPointerPosition().x,
-        y: this.getStage().getPointerPosition().y,
-      });
+      this.showContextMenu();
     }
   }
 }
