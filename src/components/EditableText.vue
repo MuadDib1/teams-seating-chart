@@ -12,7 +12,6 @@ const PADDING = 6
 
 export default {
   props: {
-    stage: Object,
     id: String,
     text: String,
     x: Number,
@@ -60,9 +59,10 @@ export default {
       const textPosition = textNode.absolutePosition();
 
       // so position of textarea will be the sum of positions above:
+      // 現在の仕様だと stage.container() の offset は考慮不要だったので削除した
       const areaPosition = {
-        x: this.stage.container().offsetLeft + textPosition.x,
-        y: this.stage.container().offsetTop + textPosition.y,
+        x: textPosition.x,
+        y: textPosition.y,
       };
 
       // create textarea and style it

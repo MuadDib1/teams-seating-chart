@@ -8,14 +8,11 @@
 
 <script>
 export default {
-  props: {
-    stage: Object,
-  },
   methods: {
-    show () {
+    show (stage) {
       const menu = this.$refs.menu;
-      const containerRect = this.stage.container().getBoundingClientRect();
-      const pointerPosition = this.stage.getPointerPosition();
+      const containerRect = stage.container().getBoundingClientRect();
+      const pointerPosition = stage.getPointerPosition();
 
       menu.style.top = containerRect.top + pointerPosition.y + 4 + 'px';
       menu.style.left = containerRect.left + pointerPosition.x + 4 + 'px';
