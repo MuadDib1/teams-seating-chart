@@ -7,10 +7,13 @@ module.exports.openChat = function(email, inTeamsApp) {
 }
 
 module.exports.createWindowAndScrapePeople = async function(parentWindow, debug) {
+  const width = 300;
+  const height = 300;
+  const x = parseInt(parentWindow.getPosition()[0] + parentWindow.getSize()[0] / 2 - width / 2);
+  const y = parseInt(parentWindow.getPosition()[1] + parentWindow.getSize()[1] / 2 - height / 2);
   const teamsWindow = new BrowserWindow({
     parent: parentWindow,
-    width: 300,
-    height: 300,
+    x, y, width, height,
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
