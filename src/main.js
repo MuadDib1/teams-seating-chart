@@ -1,5 +1,6 @@
 const path = require('path');
 const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
+const windowStateKeeper = require('electron-window-state');
 
 const TeamsUtils = require('./teams.js');
 const Settings = require('./settings.js');
@@ -17,9 +18,15 @@ let teamsWindow = null;
 let tray = null;
 
 const createWindow = () => {
+  const winState = windowStateKeeper({
+    defaultWidth: 800,
+    defaultHeight: 600
+  });
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    x: winState.x,
+    y: winState.y,
+    width: winState.width,
+    height: winState.height,
     title: APP_TITLE,
     // skipTaskbar: true,
     autoHideMenuBar: true,
@@ -31,6 +38,7 @@ const createWindow = () => {
   if (Settings.isDebug()) {
     mainWindow.webContents.openDevTools();
   }
+  winState.manage(mainWindow);
 };
 
 const setUpTray = () => {
