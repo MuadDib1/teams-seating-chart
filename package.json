@@ -1,7 +1,7 @@
 {
   "name": "teams-seating-chart",
   "productName": "teams-seating-chart",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "seating chart with Teams",
   "main": ".webpack/main",
   "scripts": {
